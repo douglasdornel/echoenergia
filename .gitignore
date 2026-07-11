@@ -10,3 +10,6 @@ yarn-error.log*
 
 # TS incremental build info
 tsconfig.tsbuildinfo
+
+# single-file preview build
+dist-single

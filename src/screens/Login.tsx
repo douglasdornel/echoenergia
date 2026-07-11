@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Icon } from '@/components/ui/Icon'
 import { useAuth } from '@/context/AuthContext'
+import logoUrl from '@/assets/echoenergia-logo.png'
 
 const otpBox = (focused: boolean) => ({
   width: '100%',
@@ -89,7 +90,7 @@ export function Login() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-          <img src="/assets/echoenergia-logo.png" alt="Echo Energia" style={{ height: 34 }} />
+          <img src={logoUrl} alt="Echo Energia" style={{ height: 34 }} />
         </div>
         <p
           style={{

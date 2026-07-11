@@ -5,6 +5,7 @@ import { useSettings } from '@/context/SettingsContext'
 import { useAuth } from '@/context/AuthContext'
 import { PARTNER } from '@/data/mock'
 import { TIER_ICON, tierProgressPct } from '@/lib/tiers'
+import logoUrl from '@/assets/echoenergia-logo.png'
 
 const eyebrow = {
   fontSize: 10,
@@ -44,7 +45,7 @@ export function Sidebar() {
           borderBottom: '1px solid var(--eeds-ink-100)',
         }}
       >
-        <img src="/assets/echoenergia-logo.png" alt="Echo Energia" style={{ height: 26 }} />
+        <img src={logoUrl} alt="Echo Energia" style={{ height: 26 }} />
       </div>
 
       <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--eeds-ink-100)' }}>
