@@ -1,25 +1,76 @@
-# CODING AGENTS: READ THIS FIRST
+# Portal de Parceiros · Echo Energia
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+Portal comercial para parceiros da Echo Energia (Grupo Equatorial): registro de
+leads, pipeline de oportunidades, gerador de cotação com simulação de
+comissionamento em tempo real, acompanhamento de pagamentos (upfront +
+recorrência), treinamentos, níveis de parceiro, atendimento, notificações e
+gestão da conta / equipe de vendas.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Implementação em **React + Vite + TypeScript**, fiel ao Echo Energia Design
+System (EEDS). Os dados hoje vêm de mocks, mas atrás de uma camada de serviços
+pronta para API (veja abaixo).
 
-## What you should do — IMPORTANT
+## Como rodar
 
-**Read the chat transcripts first.** There are 2 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+```bash
+npm install
+npm run dev        # servidor de desenvolvimento (http://localhost:5173)
+npm run build      # build de produção (tsc + vite build → dist/)
+npm run preview    # serve o build de produção
+npm run typecheck  # checagem de tipos sem emitir
+```
 
-**Read `project/Portal de Parceiros.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+No login, clique **Receber código → Verificar código** (o OTP já vem
+preenchido) para entrar.
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Estrutura
 
-## About the design files
+```
+src/
+  main.tsx              # bootstrap: Router + Auth + Settings providers
+  App.tsx               # rotas; alterna Login × AppShell conforme sessão
+  styles/
+    tokens.css          # tokens EEDS (cores, tipografia, sombras, motion)
+    global.css          # reset + classes utilitárias (scrollbar, range, animações)
+  types/                # tipos de domínio (Lead, Deal, Tier, ...)
+  data/mock.ts          # datasets de exemplo (fonte única de conteúdo)
+  services/             # camada de serviços async, pronta para API (ver abaixo)
+  hooks/useResource.ts  # lê um Resource para o estado do componente
+  lib/                  # format (pt-BR), status (cores), tiers (comissão)
+  context/              # AuthContext (login/OTP/sessão), SettingsContext (nível + variante)
+  components/
+    ui/                 # primitivas (Icon, Button, Card, Field, StatusBadge, Toggle, ...)
+    layout/             # AppShell, Sidebar, Topbar, UserMenu, TweaksPanel, nav
+    overlays/           # Drawer de lead/oportunidade, modal de vídeo, modal de convite
+  screens/              # uma tela por rota (Dashboard, Leads, Quote, Account, ...)
+```
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+## Camada de dados pronta para API
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+Componentes nunca leem `data/mock.ts` diretamente para listas — usam serviços
+em `src/services`. Cada serviço expõe um `Resource<T>` com:
 
-## Bundle contents
+- `get(): Promise<T>` — o contrato de API. Troque o produtor por um `fetch(...)`
+  para ir ao ar sem tocar nos componentes.
+- `peek(): T` — snapshot síncrono do mock, usado para semear o estado do React
+  (sem "flash" de carregamento hoje).
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Portal de parceiros Echoenergia` project files (HTML prototypes, assets, components)
+O hook `useResource(resource)` consome esse contrato. Para conectar um backend
+real, substitua os produtores por chamadas HTTP e ajuste `useResource` para
+lidar com estados de carregamento/erro — a interface dos componentes permanece.
+
+## Comissionamento e níveis
+
+O cálculo da cotação e as regras de nível ficam em `src/lib/tiers.ts`
+(`computeQuote`, `TIERS`). O nível do parceiro afeta as taxas de comissão, o
+desbloqueio de preço base, treinamentos avançados e benefícios.
+
+O **painel de tweaks** (canto inferior direito) permite trocar o nível do
+parceiro e a variante do dashboard — é um controle de demonstração, não faz
+parte do produto final.
+
+## Origem do design
+
+Recriado a partir do bundle de handoff do Claude Design em `project/` (protótipo
+HTML/CSS/JS) e das transcrições em `chats/`. Esses arquivos permanecem no
+repositório como referência de design.

@@ -1,0 +1,143 @@
+/* ============================================================
+   Echo Energia Design System (EEDS) — Colors & Type
+   v1.0 — Foundational tokens for all digital channels.
+   Ported verbatim from the design bundle (colors_and_type.css).
+   Fonts are loaded via <link> in index.html.
+   ============================================================ */
+
+:root {
+  /* -------- BRAND · NAVY (institutional, primary) -------- */
+  --eeds-navy-50:  #F0F2FA;
+  --eeds-navy-100: #DCE0F2;
+  --eeds-navy-200: #B5BDE3;
+  --eeds-navy-300: #8290CC;
+  --eeds-navy-400: #4D5FAE;
+  --eeds-navy-500: #2E419A;
+  --eeds-navy-600: #1E2C7A; /* primary brand */
+  --eeds-navy-700: #172362;
+  --eeds-navy-800: #101A47;
+  --eeds-navy-900: #0A1130;
+
+  /* -------- BRAND · ORANGE (action / CTA only) -------- */
+  --eeds-orange-50:  #FFF3EB;
+  --eeds-orange-100: #FFE0CC;
+  --eeds-orange-200: #FDB988;
+  --eeds-orange-300: #FB9655;
+  --eeds-orange-400: #F97316; /* CTA */
+  --eeds-orange-500: #E55F0A; /* CTA hover */
+  --eeds-orange-600: #BD4D08;
+  --eeds-orange-700: #8F3A06;
+
+  /* -------- INK (warm-tinted neutrals — not pure gray) ---- */
+  --eeds-ink-50:  #F8F9FB;
+  --eeds-ink-100: #F1F3F7;
+  --eeds-ink-200: #E4E7EE;
+  --eeds-ink-300: #CBD0DB;
+  --eeds-ink-400: #9098AB;
+  --eeds-ink-500: #646E85;
+  --eeds-ink-600: #454D62;
+  --eeds-ink-700: #2D3445;
+  --eeds-ink-800: #1B202C;
+  --eeds-ink-900: #0E1119;
+
+  /* -------- SEMANTIC -------- */
+  --eeds-success-bg:     #E8F5EE;
+  --eeds-success-fg:     #0F7A3D;
+  --eeds-success-border: #A8D9BD;
+  --eeds-warning-bg:     #FFF6E5;
+  --eeds-warning-fg:     #9A6300;
+  --eeds-warning-border: #F0CB7A;
+  --eeds-danger-bg:      #FEEAE9;
+  --eeds-danger-fg:      #A8201A;
+  --eeds-danger-border:  #F0A39F;
+  --eeds-info-bg:        #E8F0FE;
+  --eeds-info-fg:        #1456C7;
+  --eeds-info-border:    #A8C2EE;
+
+  /* -------- DATA-VIZ (dedicated; never mix with semantic) -- */
+  --eeds-viz-1: #1E2C7A; /* navy */
+  --eeds-viz-2: #F97316; /* orange */
+  --eeds-viz-3: #0EA5A4; /* teal */
+  --eeds-viz-4: #8B5CF6; /* purple */
+  --eeds-viz-5: #E11D48; /* rose */
+  --eeds-viz-6: #475569; /* slate */
+
+  /* -------- SEMANTIC SURFACE / TEXT (recommended app vars) -- */
+  --eeds-bg-base:     var(--eeds-ink-50);
+  --eeds-bg-surface:  #FFFFFF;
+  --eeds-bg-subtle:   var(--eeds-ink-100);
+  --eeds-bg-brand:    var(--eeds-navy-600);
+  --eeds-text-primary:    var(--eeds-ink-900);
+  --eeds-text-secondary:  var(--eeds-ink-600);
+  --eeds-text-muted:      var(--eeds-ink-500);
+  --eeds-text-on-brand:   #FFFFFF;
+  --eeds-border-default:  var(--eeds-ink-200);
+  --eeds-border-strong:   var(--eeds-ink-300);
+
+  /* -------- TYPOGRAPHY -------- */
+  --eeds-font-display: 'Sora', system-ui, -apple-system, sans-serif;
+  --eeds-font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --eeds-font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --eeds-fs-xs:   11px;
+  --eeds-fs-sm:   13px;
+  --eeds-fs-base: 14px;
+  --eeds-fs-md:   16px;
+  --eeds-fs-lg:   18px;
+  --eeds-fs-xl:   20px;
+  --eeds-fs-2xl:  24px;
+  --eeds-fs-3xl:  30px;
+  --eeds-fs-4xl:  36px;
+  --eeds-fs-5xl:  48px;
+
+  --eeds-fw-regular:  400;
+  --eeds-fw-medium:   500;
+  --eeds-fw-semibold: 600;
+  --eeds-fw-bold:     700;
+
+  --eeds-lh-tight:   1.2;
+  --eeds-lh-snug:    1.35;
+  --eeds-lh-normal:  1.5;
+  --eeds-lh-relaxed: 1.65;
+
+  /* -------- SPACING (4-multiple ramp) -------- */
+  --eeds-sp-0:  0;
+  --eeds-sp-1:  4px;
+  --eeds-sp-2:  8px;
+  --eeds-sp-3:  12px;
+  --eeds-sp-4:  16px;
+  --eeds-sp-5:  20px;
+  --eeds-sp-6:  24px;
+  --eeds-sp-8:  32px;
+  --eeds-sp-10: 40px;
+  --eeds-sp-12: 48px;
+  --eeds-sp-16: 64px;
+  --eeds-sp-20: 80px;
+  --eeds-sp-24: 96px;
+
+  /* -------- RADII -------- */
+  --eeds-r-none: 0;
+  --eeds-r-sm:   6px;
+  --eeds-r-md:   8px;
+  --eeds-r-lg:   12px;
+  --eeds-r-xl:   16px;
+  --eeds-r-2xl:  24px;
+  --eeds-r-full: 9999px;
+
+  /* -------- SHADOWS -------- */
+  --eeds-shadow-sm:         0 1px 2px 0 rgba(14,17,25,0.05);
+  --eeds-shadow-card:       0 1px 2px 0 rgba(14,17,25,0.04), 0 1px 3px 0 rgba(14,17,25,0.06);
+  --eeds-shadow-card-hover: 0 4px 12px -2px rgba(14,17,25,0.08), 0 2px 6px -1px rgba(14,17,25,0.06);
+  --eeds-shadow-pop:        0 12px 32px -8px rgba(14,17,25,0.16), 0 4px 12px -2px rgba(14,17,25,0.08);
+  --eeds-shadow-modal:      0 24px 48px -12px rgba(14,17,25,0.25);
+
+  /* -------- MOTION -------- */
+  --eeds-d-instant: 0ms;
+  --eeds-d-fast:    120ms;
+  --eeds-d-base:    200ms;
+  --eeds-d-slow:    320ms;
+  --eeds-d-slower:  480ms;
+  --eeds-ease-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --eeds-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --eeds-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+}

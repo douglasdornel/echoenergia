@@ -1,0 +1,137 @@
+/* ============================================================
+   Global base + shared utility classes.
+   The animations, custom scrollbar and range styles are ported
+   from the prototype's inline <style> block so behaviour matches.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--eeds-ink-50);
+  font-family: var(--eeds-font-body);
+  font-size: var(--eeds-fs-base);
+  line-height: var(--eeds-lh-normal);
+  color: var(--eeds-text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+
+/* ---- Entrance animation (translate only — never fades to 0 opacity) ---- */
+@keyframes eeFade {
+  from {
+    transform: translateY(6px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes eePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.ee-fade {
+  animation: eeFade var(--eeds-d-slow) var(--eeds-ease-standard);
+}
+
+/* ---- Custom scrollbar ---- */
+.ee-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.ee-scroll::-webkit-scrollbar-thumb {
+  background: var(--eeds-ink-300);
+  border-radius: 9999px;
+  border: 3px solid var(--eeds-ink-50);
+}
+
+/* ---- Range input (commission simulator sliders) ---- */
+.ee-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--eeds-ink-200);
+  outline: none;
+}
+.ee-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--eeds-orange-400);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(14, 17, 25, 0.3);
+  border: 2px solid #fff;
+}
+.ee-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--eeds-orange-400);
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+/* ---- Focus ring (WCAG 2.1 AA) ---- */
+:focus-visible {
+  outline: 2px solid var(--eeds-navy-600);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Text inputs: navy border on focus (mirrors style-focus) ---- */
+.ee-input:focus {
+  border-color: var(--eeds-navy-600);
+}
+.ee-input-chat:focus {
+  background: #fff;
+  border-color: var(--eeds-navy-600);
+}
+
+/* ---- Hover helpers ---- */
+.ee-menu-item:hover {
+  background: var(--eeds-ink-50);
+}
+.ee-row-hover:hover {
+  background: var(--eeds-ink-50);
+}
+.ee-card-hover {
+  transition: box-shadow var(--eeds-d-base) var(--eeds-ease-standard),
+    border-color var(--eeds-d-base) var(--eeds-ease-standard);
+}
+.ee-card-hover:hover {
+  box-shadow: var(--eeds-shadow-card-hover);
+  border-color: var(--eeds-ink-300);
+}
+
+/* ---- Utility ---- */
+.ee-tabnum {
+  font-variant-numeric: tabular-nums;
+}
