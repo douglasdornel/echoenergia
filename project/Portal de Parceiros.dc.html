@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="colors_and_type.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--eeds-ink-50); }
+  @keyframes eeFade { from { transform: translateY(6px); } to { transform: translateY(0); } }
+  @keyframes eePulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+  .ee-fade { animation: eeFade var(--eeds-d-slow) var(--eeds-ease-standard); }
+  .ee-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+  .ee-scroll::-webkit-scrollbar-thumb { background: var(--eeds-ink-300); border-radius: 9999px; border: 3px solid var(--eeds-ink-50); }
+  .ee-range { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 9999px; background: var(--eeds-ink-200); outline: none; }
+  .ee-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--eeds-orange-400); cursor: pointer; box-shadow: 0 1px 3px rgba(14,17,25,.3); border: 2px solid #fff; }
+  .ee-range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--eeds-orange-400); cursor: pointer; border: 2px solid #fff; }
+</style>
+</helmet>
+
+<sc-if value="{{ show.login }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh; position:relative; display:flex; align-items:center; justify-content:center; padding:24px; overflow:hidden; background:var(--eeds-navy-700); font-family:var(--eeds-font-body)">
+  <div style="position:absolute; inset:0; background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-600), var(--eeds-navy-800))"></div>
+  <div style="position:absolute; inset:0; opacity:.5; background-image:linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size:48px 48px"></div>
+  <div style="position:absolute; width:500px; height:500px; border-radius:50%; filter:blur(80px); top:-120px; right:-120px; background:rgba(249,115,22,.2)"></div>
+  <div style="position:absolute; width:500px; height:500px; border-radius:50%; filter:blur(80px); bottom:-120px; left:-120px; background:rgba(77,95,174,.3)"></div>
+  <div class="ee-fade" style="position:relative; width:100%; max-width:440px; background:#fff; border-radius:24px; padding:40px; box-shadow:var(--eeds-shadow-pop)">
+    <div style="display:flex; justify-content:center; margin-bottom:24px"><img src="assets/echoenergia-logo.png" alt="Echo Energia" style="height:34px"></div>
+    <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-orange-500); font-weight:600; text-align:center; margin:0 0 6px">Portal de parceiros</p>
+    <h1 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-navy-700); text-align:center; margin:0; letter-spacing:-.02em">Bem-vindo de volta</h1>
+    <p style="font-size:14px; color:var(--eeds-ink-500); text-align:center; margin:6px 0 28px">Acesse sua área de parceiro comercial.</p>
+
+    <sc-if value="{{ show.loginEmail }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">E-mail corporativo</p>
+      <div style="position:relative; margin-bottom:16px">
+        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--eeds-ink-400); font-size:16px; display:inline-flex">{{ ico.Mail }}</span>
+        <input type="email" value="parceiro@solarengconsultoria.com.br" style="width:100%; height:44px; padding:0 14px 0 38px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none; background:#fff">
+      </div>
+      <button onClick="{{ goOtp }}" style="width:100%; height:48px; border:0; border-radius:12px; background:var(--eeds-orange-400); color:#fff; font-family:var(--eeds-font-body); font-size:16px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:var(--eeds-shadow-sm)">Receber código <span style="font-size:18px; display:inline-flex">{{ ico.ArrowRight }}</span></button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ show.loginOtp }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; background:var(--eeds-info-bg); border:1px solid var(--eeds-info-border); color:var(--eeds-info-fg); border-radius:8px; padding:10px 12px; font-size:12px; margin-bottom:18px">
+        <span style="font-size:16px; display:inline-flex">{{ ico.Mail }}</span> Código enviado para seu e-mail
+      </div>
+      <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 8px">Código de verificação</p>
+      <div style="display:flex; gap:8px; margin-bottom:18px">
+        <input value="3" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-navy-600); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none; box-shadow:0 0 0 2px rgba(30,44,122,.1)">
+        <input value="9" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none">
+        <input value="1" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none">
+        <input value="4" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none">
+        <input value="" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none">
+        <input value="" style="width:100%; height:52px; text-align:center; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:20px; font-weight:600; color:var(--eeds-ink-800); outline:none">
+      </div>
+      <button onClick="{{ doLogin }}" style="width:100%; height:48px; border:0; border-radius:12px; background:var(--eeds-orange-400); color:#fff; font-family:var(--eeds-font-body); font-size:16px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)">Verificar código</button>
+      <button onClick="{{ backToEmail }}" style="width:100%; height:40px; margin-top:8px; border:0; background:transparent; color:var(--eeds-ink-500); font-family:var(--eeds-font-body); font-size:13px; cursor:pointer">Usar outro e-mail</button>
+    </div>
+    </sc-if>
+
+    <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--eeds-ink-100); text-align:center">
+      <p style="font-size:11px; color:var(--eeds-ink-500); margin:0">Echo Energia · Soluções energéticas para todos</p>
+      <p style="font-size:10px; color:var(--eeds-ink-400); margin:2px 0 0">Uma empresa do Grupo Equatorial</p>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ show.app }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex; min-height:100vh; background:var(--eeds-ink-50); font-family:var(--eeds-font-body)">
+  <!-- SIDEBAR -->
+  <aside style="width:264px; background:#fff; border-right:1px solid var(--eeds-ink-200); display:flex; flex-direction:column; flex-shrink:0; position:sticky; top:0; height:100vh">
+    <div style="height:64px; display:flex; align-items:center; padding:0 20px; border-bottom:1px solid var(--eeds-ink-100)"><img src="assets/echoenergia-logo.png" alt="Echo Energia" style="height:26px"></div>
+    <div style="padding:16px 20px; border-bottom:1px solid var(--eeds-ink-100)">
+      <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">Parceiro comercial</p>
+      <p style="font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:4px 0 6px">SolarEng Consultoria</p>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:9999px; background:var(--eeds-orange-50); border:1px solid var(--eeds-orange-200)">
+        <span style="font-size:13px; display:inline-flex; color:var(--eeds-orange-500)">{{ tierIco }}</span>
+        <span style="font-size:11px; font-weight:600; color:var(--eeds-orange-600)">Parceiro {{ nivel }}</span>
+      </div>
+    </div>
+    <nav class="ee-scroll" style="padding:12px; flex:1; overflow-y:auto">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="8">
+        <sc-if value="{{ item.sep }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-400); font-weight:600; margin:14px 12px 6px">{{ item.label }}</p>
+        </sc-if>
+        <sc-if value="{{ item.isButton }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ item.onClick }}" style="position:relative; width:100%; display:flex; align-items:center; gap:12px; height:40px; padding:0 12px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer; text-align:left; margin-bottom:2px; background:{{ item.bg }}; color:{{ item.fg }}; transition:background var(--eeds-d-base) var(--eeds-ease-standard), color var(--eeds-d-base) var(--eeds-ease-standard)">
+          <span style="font-size:18px; display:inline-flex">{{ item.icoEl }}</span>
+          <span>{{ item.label }}</span>
+          <sc-if value="{{ item.badge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto; font-family:var(--eeds-font-mono); font-size:10px; font-weight:600; background:var(--eeds-orange-400); color:#fff; border-radius:9999px; padding:1px 7px">{{ item.badge }}</span></sc-if>
+          <sc-if value="{{ item.active }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; left:0; top:8px; bottom:8px; width:2px; background:var(--eeds-orange-400); border-radius:0 2px 2px 0"></span></sc-if>
+        </button>
+        </sc-if>
+      </sc-for>
+    </nav>
+    <div style="padding:12px; border-top:1px solid var(--eeds-ink-100)">
+      <button onClick="{{ goNivel }}" style="width:100%; text-align:left; border:1px solid var(--eeds-ink-200); background:var(--eeds-ink-50); border-radius:12px; padding:12px; cursor:pointer; margin-bottom:8px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+          <span style="font-size:11px; font-weight:600; color:var(--eeds-ink-700)">Rumo a {{ proxNivel }}</span>
+          <span style="font-family:var(--eeds-font-mono); font-size:11px; font-weight:600; color:var(--eeds-orange-500)">{{ nivelPct }}%</span>
+        </div>
+        <div style="height:6px; background:var(--eeds-ink-200); border-radius:9999px; overflow:hidden"><div style="height:100%; width:{{ nivelPctW }}; background:linear-gradient(90deg, var(--eeds-orange-400), var(--eeds-orange-300)); border-radius:9999px"></div></div>
+      </button>
+      <button onClick="{{ logout }}" style="width:100%; display:flex; align-items:center; gap:10px; height:38px; padding:0 12px; border:0; background:transparent; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; color:var(--eeds-ink-500); cursor:pointer">
+        <span style="font-size:16px; display:inline-flex">{{ ico.LogOut }}</span> Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main style="flex:1; min-width:0; display:flex; flex-direction:column">
+    <header style="position:sticky; top:0; z-index:30; background:rgba(255,255,255,.85); backdrop-filter:blur(8px); border-bottom:1px solid var(--eeds-ink-200); height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; gap:16px">
+      <h1 style="font-family:var(--eeds-font-display); font-size:18px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ pageTitle }}</h1>
+      <div style="display:flex; align-items:center; gap:8px">
+        <button onClick="{{ goNotificacoes }}" style="background:transparent; border:0; padding:10px; border-radius:8px; color:var(--eeds-ink-600); cursor:pointer; position:relative; display:inline-flex">
+          <span style="font-size:18px; display:inline-flex">{{ ico.Bell }}</span>
+          <span style="position:absolute; top:8px; right:8px; width:7px; height:7px; background:var(--eeds-orange-400); border-radius:50%; box-shadow:0 0 0 2px #fff"></span>
+        </button>
+        <div style="position:relative">
+          <div onClick="{{ toggleUserMenu }}" style="display:flex; align-items:center; gap:8px; padding:6px; border-radius:8px; cursor:pointer; background:{{ userMenuBg }}">
+            <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, var(--eeds-navy-600), var(--eeds-navy-800)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600">RC</div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:14px; font-weight:500; color:var(--eeds-ink-700)"><span>Renata Campos</span><span style="font-size:14px; display:inline-flex; color:var(--eeds-ink-500); transform:{{ userMenuCaret }}">{{ ico.ChevronDown }}</span></div>
+          </div>
+          <sc-if value="{{ userMenuOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; top:calc(100% + 8px); right:0; width:248px; background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-pop); padding:6px; z-index:50">
+            <div style="display:flex; align-items:center; gap:10px; padding:10px 10px 12px; border-bottom:1px solid var(--eeds-ink-100); margin-bottom:6px">
+              <div style="width:38px; height:38px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg, var(--eeds-navy-600), var(--eeds-navy-800)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600">RC</div>
+              <div style="min-width:0"><p style="font-size:13px; font-weight:600; color:var(--eeds-ink-800); margin:0">Renata Campos</p><p style="font-size:11px; color:var(--eeds-ink-500); margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">renata.campos@solarengconsultoria.com.br</p></div>
+            </div>
+            <sc-for list="{{ userMenu }}" as="m" hint-placeholder-count="4">
+              <button onClick="{{ m.onClick }}" style="width:100%; display:flex; align-items:center; gap:10px; height:38px; padding:0 10px; border:0; background:transparent; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; color:{{ m.fg }}; cursor:pointer; text-align:left" style-hover="background:var(--eeds-ink-50)">
+                <span style="font-size:16px; display:inline-flex; color:{{ m.icoColor }}">{{ m.icoEl }}</span><span>{{ m.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+    </header>
+
+    <div class="ee-scroll" style="flex:1; overflow-y:auto">
+
+      <!-- ============ DASHBOARD ============ -->
+      <sc-if value="{{ show.dashboard }}" hint-placeholder-val="{{ true }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:24px">
+          <div>
+            <p style="font-size:14px; color:var(--eeds-ink-500); margin:0">Olá, Renata.</p>
+            <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:4px 0 0; letter-spacing:-.02em">Visão geral da operação</h2>
+          </div>
+          <div style="display:flex; gap:8px">
+            <button onClick="{{ goLeads }}" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 16px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer"><span style="font-size:16px; display:inline-flex">{{ ico.UserPlus }}</span> Registrar lead</button>
+            <button onClick="{{ goCotacao }}" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 16px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Calculator }}</span> Nova cotação</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:16px">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+            <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px">
+                <div style="width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; background:{{ k.accentBg }}; color:{{ k.accentFg }}">{{ k.icoEl }}</div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:2px 8px; border-radius:9999px; background:{{ k.trendBg }}; color:{{ k.trendFg }}"><span style="font-size:11px; display:inline-flex">{{ k.trendIco }}</span>{{ k.change }}</span>
+              </div>
+              <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">{{ k.label }}</p>
+              <p style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:4px 0 0; font-variant-numeric:tabular-nums">{{ k.value }}<span style="font-size:14px; font-weight:500; color:var(--eeds-ink-500); margin-left:4px">{{ k.unit }}</span></p>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- variante A: resumo executivo -->
+        <sc-if value="{{ dashA }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px">
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px">
+              <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Comissão recebida</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">Upfront + recorrência · últimos 8 meses</p></div>
+              <div style="display:flex; gap:14px; align-items:center">
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--eeds-ink-600)"><span style="width:10px; height:10px; border-radius:3px; background:var(--eeds-navy-600)"></span>Upfront</span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--eeds-ink-600)"><span style="width:10px; height:10px; border-radius:3px; background:var(--eeds-orange-400)"></span>Recorrência</span>
+              </div>
+            </div>
+            <div style="height:220px; display:flex; align-items:flex-end; gap:14px; padding-top:24px">
+              <sc-for list="{{ chartBars }}" as="b" hint-placeholder-count="8">
+                <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:8px">
+                  <div style="width:100%; display:flex; flex-direction:column; justify-content:flex-end; height:170px">
+                    <div style="width:100%; background:var(--eeds-orange-400); border-radius:4px 4px 0 0; height:{{ b.recH }}"></div>
+                    <div style="width:100%; background:var(--eeds-navy-600); height:{{ b.upH }}"></div>
+                  </div>
+                  <span style="font-size:11px; color:var(--eeds-ink-500)">{{ b.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)">
+            <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 4px">Funil de oportunidades</h3>
+            <p style="font-size:12px; color:var(--eeds-ink-500); margin:0 0 16px">Pipeline ativo</p>
+            <sc-for list="{{ funil }}" as="f" hint-placeholder-count="4">
+              <div style="margin-bottom:14px">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px"><span style="font-size:13px; color:var(--eeds-ink-700); font-weight:500">{{ f.stage }}</span><span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-800); font-weight:600">{{ f.qtd }}</span></div>
+                <div style="height:8px; background:var(--eeds-ink-100); border-radius:9999px; overflow:hidden"><div style="height:100%; width:{{ f.w }}; background:{{ f.cor }}; border-radius:9999px"></div></div>
+                <p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:4px 0 0">{{ f.valor }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 20px 16px"><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Próximos repasses de comissão</h3><button onClick="{{ goPagamentos }}" style="display:inline-flex; align-items:center; gap:6px; border:0; background:transparent; color:var(--eeds-navy-600); font-size:13px; font-weight:500; cursor:pointer">Ver todos <span style="font-size:14px; display:inline-flex">{{ ico.ArrowRight }}</span></button></div>
+          <sc-for list="{{ proxRepasses }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--eeds-ink-100)">
+              <div style="display:flex; align-items:center; gap:12px">
+                <div style="width:36px; height:36px; border-radius:8px; background:{{ r.tagBg }}; color:{{ r.tagFg }}; display:flex; align-items:center; justify-content:center; font-size:16px">{{ r.icoEl }}</div>
+                <div><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ r.empresa }}</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">{{ r.tipo }} · {{ r.quando }}</p></div>
+              </div>
+              <div style="text-align:right"><p style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ r.valor }}</p><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; margin-top:4px; background:{{ r.stBg }}; color:{{ r.stFg }}; border:1px solid {{ r.stBd }}">{{ r.status }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <!-- variante B: foco em comissões -->
+        <sc-if value="{{ dashB }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px">
+          <div style="background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-800)); border-radius:12px; padding:24px; color:#fff; box-shadow:var(--eeds-shadow-card)">
+            <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.6); font-weight:500; margin:0">Comissão acumulada · 2026</p>
+            <p style="font-family:var(--eeds-font-display); font-size:36px; font-weight:700; margin:8px 0 16px; font-variant-numeric:tabular-nums">{{ acumAno }}</p>
+            <div style="display:flex; gap:24px">
+              <div><p style="font-size:11px; color:rgba(255,255,255,.6); margin:0">Upfront</p><p style="font-family:var(--eeds-font-mono); font-size:18px; font-weight:600; margin:4px 0 0">{{ acumUpfront }}</p></div>
+              <div><p style="font-size:11px; color:rgba(255,255,255,.6); margin:0">Recorrência</p><p style="font-family:var(--eeds-font-mono); font-size:18px; font-weight:600; margin:4px 0 0">{{ acumRecorr }}</p></div>
+            </div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 4px">Receita recorrente projetada</h3>
+            <p style="font-size:12px; color:var(--eeds-ink-500); margin:0 0 16px">Carteira ativa · base mensal</p>
+            <p style="font-family:var(--eeds-font-display); font-size:30px; font-weight:700; color:var(--eeds-ink-800); margin:0; font-variant-numeric:tabular-nums">{{ mrrValor }}<span style="font-size:14px; font-weight:500; color:var(--eeds-ink-500)"> /mês</span></p>
+            <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--eeds-ink-100); display:flex; flex-direction:column; gap:10px">
+              <sc-for list="{{ carteira }}" as="c" hint-placeholder-count="3">
+                <div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:13px; color:var(--eeds-ink-700)">{{ c.empresa }}</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800)">{{ c.valor }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="padding:20px 20px 16px"><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Próximos repasses de comissão</h3></div>
+          <sc-for list="{{ proxRepasses }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-top:1px solid var(--eeds-ink-100)">
+              <div style="display:flex; align-items:center; gap:12px">
+                <div style="width:36px; height:36px; border-radius:8px; background:{{ r.tagBg }}; color:{{ r.tagFg }}; display:flex; align-items:center; justify-content:center; font-size:16px">{{ r.icoEl }}</div>
+                <div><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ r.empresa }}</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">{{ r.tipo }} · {{ r.quando }}</p></div>
+              </div>
+              <div style="text-align:right"><p style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ r.valor }}</p><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; margin-top:4px; background:{{ r.stBg }}; color:{{ r.stFg }}; border:1px solid {{ r.stBd }}">{{ r.status }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+      <!-- ============ LEADS ============ -->
+      <sc-if value="{{ show.leads }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px">
+          <div>
+            <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Leads</h2>
+            <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Registre e qualifique potenciais clientes antes de abrir uma oportunidade.</p>
+          </div>
+          <button style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 16px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Plus }}</span> Registrar lead</button>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap">
+          <span style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border-radius:8px; background:var(--eeds-navy-600); color:#fff; font-size:13px; font-weight:500">Todos</span>
+          <span style="display:inline-flex; align-items:center; height:32px; padding:0 12px; border-radius:8px; background:#fff; border:1px solid var(--eeds-ink-200); color:var(--eeds-ink-600); font-size:13px; cursor:pointer">Novos</span>
+          <span style="display:inline-flex; align-items:center; height:32px; padding:0 12px; border-radius:8px; background:#fff; border:1px solid var(--eeds-ink-200); color:var(--eeds-ink-600); font-size:13px; cursor:pointer">Em contato</span>
+          <span style="display:inline-flex; align-items:center; height:32px; padding:0 12px; border-radius:8px; background:#fff; border:1px solid var(--eeds-ink-200); color:var(--eeds-ink-600); font-size:13px; cursor:pointer">Qualificados</span>
+        </div>
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="display:grid; grid-template-columns:2.2fr 1.6fr 0.8fr 0.9fr 1fr 1.1fr 36px; gap:12px; padding:12px 20px; background:var(--eeds-ink-50); border-bottom:1px solid var(--eeds-ink-200)">
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Empresa</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Contato</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Submercado</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Demanda</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Origem</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Status</span>
+            <span></span>
+          </div>
+          <sc-for list="{{ leads }}" as="l" hint-placeholder-count="6">
+            <div onClick="{{ l.open }}" style="display:grid; grid-template-columns:2.2fr 1.6fr 0.8fr 0.9fr 1fr 1.1fr 36px; gap:12px; align-items:center; padding:14px 20px; border-bottom:1px solid var(--eeds-ink-100); cursor:pointer">
+              <div style="display:flex; align-items:center; gap:12px; min-width:0">
+                <div style="width:36px; height:36px; border-radius:8px; background:var(--eeds-navy-50); color:var(--eeds-navy-700); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; flex-shrink:0">{{ l.ini }}</div>
+                <div style="min-width:0"><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">{{ l.empresa }}</p><p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:2px 0 0">{{ l.id }}</p></div>
+              </div>
+              <div style="min-width:0"><p style="font-size:13px; color:var(--eeds-ink-700); margin:0">{{ l.contato }}</p><p style="font-size:11px; color:var(--eeds-ink-500); margin:2px 0 0">{{ l.cargo }}</p></div>
+              <span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-700)">{{ l.sub }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800); text-align:right">{{ l.mwTxt }}</span>
+              <span style="font-size:12px; color:var(--eeds-ink-600)">{{ l.origem }}</span>
+              <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ l.st.bg }}; color:{{ l.st.fg }}; border:1px solid {{ l.st.bd }}">{{ l.status }}</span></span>
+              <span style="display:inline-flex; justify-content:center; color:var(--eeds-ink-400); font-size:16px">{{ ico.ChevronRight }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ OPORTUNIDADES ============ -->
+      <sc-if value="{{ show.oportunidades }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; width:100%">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px; max-width:1400px; margin-left:auto; margin-right:auto">
+          <div>
+            <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Oportunidades</h2>
+            <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Acompanhe o pipeline de contratos em desenvolvimento por estágio.</p>
+          </div>
+          <button onClick="{{ goCotacao }}" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 16px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Calculator }}</span> Gerar cotação</button>
+        </div>
+        <div class="ee-scroll" style="overflow-x:auto; padding-bottom:8px">
+          <div style="display:flex; gap:16px; min-width:1100px; max-width:1400px; margin:0 auto">
+            <sc-for list="{{ pipeline }}" as="col" hint-placeholder-count="4">
+              <div style="flex:1; min-width:260px; background:var(--eeds-ink-100); border-radius:12px; padding:12px">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 8px 12px">
+                  <div style="display:flex; align-items:center; gap:8px"><span style="width:8px; height:8px; border-radius:50%; background:{{ col.cor }}"></span><span style="font-size:13px; font-weight:600; color:var(--eeds-ink-700)">{{ col.stage }}</span><span style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500)">{{ col.qtd }}</span></div>
+                </div>
+                <p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:0 8px 12px">{{ col.total }}</p>
+                <div style="display:flex; flex-direction:column; gap:10px">
+                  <sc-for list="{{ col.opps }}" as="o" hint-placeholder-count="2">
+                    <div onClick="{{ o.open }}" style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:10px; padding:14px; cursor:pointer; box-shadow:var(--eeds-shadow-sm)">
+                      <p style="font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 6px">{{ o.empresa }}</p>
+                      <p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:0 0 12px">{{ o.mwTxt }}</p>
+                      <p style="font-family:var(--eeds-font-display); font-size:18px; font-weight:700; color:var(--eeds-ink-800); margin:0 0 12px; font-variant-numeric:tabular-nums">{{ o.valor }}</p>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px"><span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500)">Probabilidade</span><span style="font-family:var(--eeds-font-mono); font-size:11px; font-weight:600; color:var(--eeds-ink-700)">{{ o.prob }}</span></div>
+                      <div style="height:6px; background:var(--eeds-ink-100); border-radius:9999px; overflow:hidden; margin-bottom:12px"><div style="height:100%; width:{{ o.probW }}; background:{{ o.cor }}; border-radius:9999px"></div></div>
+                      <div style="display:flex; align-items:center; justify-content:space-between"><div style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg,var(--eeds-navy-600),var(--eeds-navy-800)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:600">{{ o.owner }}</div><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--eeds-ink-500)"><span style="font-size:12px; display:inline-flex">{{ ico.Clock }}</span>{{ o.dias }}</span></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ COTAÇÃO ============ -->
+      <sc-if value="{{ show.cotacao }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Gerador de cotação</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Simule o contrato do cliente e visualize sua comissão em tempo real.</p>
+        </div>
+        <div style="display:inline-flex; background:var(--eeds-ink-100); border-radius:10px; padding:3px; margin-bottom:20px">
+          <button onClick="{{ setQuoteGuiado }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ quoteGuiadoBg }}; color:{{ quoteGuiadoFg }}">Modo guiado</button>
+          <button onClick="{{ setQuoteAvancado }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ quoteAvancadoBg }}; color:{{ quoteAvancadoFg }}">Modo avançado</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1.1fr 1fr; gap:20px; align-items:start">
+          <!-- inputs -->
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0 0 4px">Parâmetros do contrato</p>
+            <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 20px">Frigorífico Vale Verde</h3>
+
+            <div style="margin-bottom:22px">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span style="font-size:13px; font-weight:500; color:var(--eeds-ink-700)">Volume médio</span><span style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-900)">{{ quote.volume }} MW</span></div>
+              <input type="range" class="ee-range" min="0.5" max="8" step="0.1" value="{{ quote.volume }}" onChange="{{ setQVolume }}" onInput="{{ setQVolume }}">
+            </div>
+            <div style="margin-bottom:22px">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span style="font-size:13px; font-weight:500; color:var(--eeds-ink-700)">Prazo do contrato</span><span style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-900)">{{ quote.prazo }} meses</span></div>
+              <input type="range" class="ee-range" min="12" max="60" step="12" value="{{ quote.prazo }}" onChange="{{ setQPrazo }}" onInput="{{ setQPrazo }}">
+            </div>
+            <div style="margin-bottom:4px">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px"><span style="font-size:13px; font-weight:500; color:var(--eeds-ink-700)">Preço da energia</span><span style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-900)">R$ {{ quote.preco }} /MWh</span></div>
+              <input type="range" class="ee-range" min="220" max="380" step="5" value="{{ quote.preco }}" onChange="{{ setQPreco }}" onInput="{{ setQPreco }}">
+            </div>
+
+            <sc-if value="{{ quoteAvancado }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:24px; padding-top:20px; border-top:1px dashed var(--eeds-ink-200)">
+              <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-orange-600); font-weight:600; margin:0 0 14px">Comissionamento — nível {{ nivel }}</p>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+                <div style="background:var(--eeds-navy-50); border:1px solid var(--eeds-navy-100); border-radius:10px; padding:14px"><p style="font-size:11px; color:var(--eeds-navy-700); margin:0 0 4px">Upfront</p><p style="font-family:var(--eeds-font-mono); font-size:18px; font-weight:600; color:var(--eeds-navy-700); margin:0">{{ quote.upPct }}%</p><p style="font-size:10px; color:var(--eeds-ink-500); margin:4px 0 0">sobre valor do contrato</p></div>
+                <div style="background:var(--eeds-orange-50); border:1px solid var(--eeds-orange-200); border-radius:10px; padding:14px"><p style="font-size:11px; color:var(--eeds-orange-600); margin:0 0 4px">Recorrência</p><p style="font-family:var(--eeds-font-mono); font-size:18px; font-weight:600; color:var(--eeds-orange-600); margin:0">R$ {{ quote.recRS }}</p><p style="font-size:10px; color:var(--eeds-ink-500); margin:4px 0 0">por MWh consumido</p></div>
+              </div>
+              <p style="font-size:12px; color:var(--eeds-ink-500); margin:14px 0 0; line-height:1.5">As taxas são definidas pelo seu nível de parceiro. Suba de nível para destravar comissões maiores.</p>
+            </div>
+            </sc-if>
+          </div>
+
+          <!-- resultado -->
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden; position:sticky; top:88px">
+            <div style="padding:20px 24px; border-bottom:1px solid var(--eeds-ink-100)">
+              <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0 0 8px">Contrato simulado</p>
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px"><span style="font-size:13px; color:var(--eeds-ink-600)">Consumo estimado</span><span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-800)">{{ quote.mwhMes }} MWh/mês</span></div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px"><span style="font-size:13px; color:var(--eeds-ink-600)">Faturamento mensal</span><span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-800)">{{ quote.valorMes }}</span></div>
+              <div style="display:flex; justify-content:space-between"><span style="font-size:13px; color:var(--eeds-ink-600)">Valor total do contrato</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800)">{{ quote.valorTotal }}</span></div>
+            </div>
+            <div style="padding:24px; background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-800)); color:#fff">
+              <p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.6); font-weight:500; margin:0 0 4px">Sua comissão total estimada</p>
+              <p style="font-family:var(--eeds-font-display); font-size:36px; font-weight:700; margin:4px 0 18px; font-variant-numeric:tabular-nums">{{ quote.total }}</p>
+              <div style="height:10px; border-radius:9999px; overflow:hidden; display:flex; margin-bottom:12px"><div style="width:{{ quote.upBarW }}; background:#fff"></div><div style="width:{{ quote.recBarW }}; background:var(--eeds-orange-400)"></div></div>
+              <div style="display:flex; justify-content:space-between">
+                <div><p style="font-size:11px; color:rgba(255,255,255,.6); margin:0">Upfront (no fechamento)</p><p style="font-family:var(--eeds-font-mono); font-size:16px; font-weight:600; margin:4px 0 0">{{ quote.upfront }}</p></div>
+                <div style="text-align:right"><p style="font-size:11px; color:rgba(255,255,255,.6); margin:0">Recorrência ({{ quote.prazo }}m)</p><p style="font-family:var(--eeds-font-mono); font-size:16px; font-weight:600; margin:4px 0 0">{{ quote.recorrTotal }}</p></div>
+              </div>
+            </div>
+            <div style="padding:20px 24px; display:flex; flex-direction:column; gap:8px">
+              <div style="display:flex; justify-content:space-between; padding:6px 0"><span style="font-size:13px; color:var(--eeds-ink-600)">Recorrência mensal</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-orange-600)">{{ quote.recorrMes }}/mês</span></div>
+              <div style="display:flex; gap:8px; margin-top:8px">
+                <button style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Send }}</span> Enviar para cliente</button>
+                <button style="display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; padding:0 16px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer"><span style="font-size:16px; display:inline-flex">{{ ico.Download }}</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ NEGOCIAÇÕES ============ -->
+      <sc-if value="{{ show.negociacoes }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Negociações</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Contratos fechados e propostas indicativas com preço base.</p>
+        </div>
+
+        <!-- propostas indicativas -->
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); padding:20px; margin-bottom:20px">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px">
+            <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Propostas indicativas</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">Solicite um preço base da Echo para negociar com seu cliente.</p></div>
+            <sc-if value="{{ tierPrecoBase }}" hint-placeholder-val="{{ true }}">
+            <button style="display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border:1px solid var(--eeds-navy-200); background:var(--eeds-navy-50); color:var(--eeds-navy-700); border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer"><span style="font-size:15px; display:inline-flex">{{ ico.Quote }}</span> Solicitar proposta indicativa</button>
+            </sc-if>
+            <sc-if value="{{ tierPrecoBaseLocked }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 14px; border-radius:8px; background:var(--eeds-ink-100); color:var(--eeds-ink-500); font-size:12px"><span style="font-size:14px; display:inline-flex">{{ ico.Lock }}</span> Disponível a partir do nível Ouro</span>
+            </sc-if>
+          </div>
+          <sc-for list="{{ propostas }}" as="p" hint-placeholder-count="2">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid var(--eeds-ink-100); border-radius:10px; margin-bottom:8px">
+              <div style="display:flex; align-items:center; gap:12px">
+                <div style="width:36px; height:36px; border-radius:8px; background:var(--eeds-orange-50); color:var(--eeds-orange-500); display:flex; align-items:center; justify-content:center; font-size:16px">{{ ico.FileText }}</div>
+                <div><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ p.empresa }}</p><p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:2px 0 0">{{ p.sub }} · {{ p.mwTxt }} · {{ p.prazo }}m</p></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:20px">
+                <div style="text-align:right"><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); margin:0">Preço base</p><p style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:2px 0 0">{{ p.precoTxt }}</p></div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:3px 10px; border-radius:9999px; background:{{ p.st.bg }}; color:{{ p.st.fg }}; border:1px solid {{ p.st.bd }}">{{ p.status }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- contratos fechados -->
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="padding:20px 20px 16px"><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Contratos fechados</h3></div>
+          <div style="display:grid; grid-template-columns:2fr 1.1fr 0.9fr 0.9fr 1.1fr 1.1fr 1fr; gap:12px; padding:12px 20px; background:var(--eeds-ink-50); border-top:1px solid var(--eeds-ink-200); border-bottom:1px solid var(--eeds-ink-200)">
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Cliente</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Boleta</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Demanda</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Prazo</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Valor contrato</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Comissão upfront</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Status</span>
+          </div>
+          <sc-for list="{{ deals }}" as="d" hint-placeholder-count="5">
+            <div style="display:grid; grid-template-columns:2fr 1.1fr 0.9fr 0.9fr 1.1fr 1.1fr 1fr; gap:12px; align-items:center; padding:14px 20px; border-bottom:1px solid var(--eeds-ink-100)">
+              <span style="font-size:14px; font-weight:500; color:var(--eeds-ink-800)">{{ d.empresa }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-600)">{{ d.boleta }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-800); text-align:right">{{ d.mwTxt }}</span>
+              <span style="font-size:13px; color:var(--eeds-ink-600)">{{ d.prazo }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-800); text-align:right">{{ d.valor }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-success-fg); text-align:right">{{ d.upfront }}</span>
+              <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ d.st.bg }}; color:{{ d.st.fg }}; border:1px solid {{ d.st.bd }}">{{ d.status }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PAGAMENTOS ============ -->
+      <sc-if value="{{ show.pagamentos }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Pagamentos de comissão</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Repasses upfront no fechamento e recorrência mensal conforme consumo de cada cliente.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px">
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)"><div style="width:40px; height:40px; border-radius:8px; background:var(--eeds-navy-50); color:var(--eeds-navy-600); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px">{{ ico.HandCoins }}</div><p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">Upfront a receber</p><p style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:4px 0 0; font-variant-numeric:tabular-nums">{{ paySummary.upfrontPrev }}</p></div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)"><div style="width:40px; height:40px; border-radius:8px; background:var(--eeds-orange-50); color:var(--eeds-orange-500); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px">{{ ico.Repeat }}</div><p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">Recorrência do mês</p><p style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:4px 0 0; font-variant-numeric:tabular-nums">{{ paySummary.recorrMes }}</p></div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:20px; box-shadow:var(--eeds-shadow-card)"><div style="width:40px; height:40px; border-radius:8px; background:var(--eeds-success-bg); color:var(--eeds-success-fg); display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px">{{ ico.CircleDollarSign }}</div><p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">Total recebido no ano</p><p style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:4px 0 0; font-variant-numeric:tabular-nums">{{ paySummary.totalAno }}</p></div>
+        </div>
+
+        <div style="display:inline-flex; background:var(--eeds-ink-100); border-radius:10px; padding:3px; margin-bottom:16px">
+          <button onClick="{{ setPayUpfront }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ payUpfrontBg }}; color:{{ payUpfrontFg }}">Upfront</button>
+          <button onClick="{{ setPayRecorr }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ payRecorrBg }}; color:{{ payRecorrFg }}">Recorrência mensal</button>
+        </div>
+
+        <sc-if value="{{ payUpfront }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="display:grid; grid-template-columns:2fr 1.2fr 1.2fr 1fr 1fr; gap:12px; padding:12px 20px; background:var(--eeds-ink-50); border-bottom:1px solid var(--eeds-ink-200)">
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Cliente</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Boleta</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Valor</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Data</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Status</span>
+          </div>
+          <sc-for list="{{ upfrontPays }}" as="p" hint-placeholder-count="4">
+            <div style="display:grid; grid-template-columns:2fr 1.2fr 1.2fr 1fr 1fr; gap:12px; align-items:center; padding:14px 20px; border-bottom:1px solid var(--eeds-ink-100)">
+              <span style="font-size:14px; font-weight:500; color:var(--eeds-ink-800)">{{ p.empresa }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-600)">{{ p.boleta }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800); text-align:right">{{ p.valorTxt }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-600)">{{ p.data }}</span>
+              <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ p.st.bg }}; color:{{ p.st.fg }}; border:1px solid {{ p.st.bd }}">{{ p.status }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ payRecorr }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="display:grid; grid-template-columns:1.8fr 0.9fr 1fr 0.9fr 1fr 1fr; gap:12px; padding:12px 20px; background:var(--eeds-ink-50); border-bottom:1px solid var(--eeds-ink-200)">
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Cliente</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Competência</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Consumo</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">R$/MWh</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Valor</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Status</span>
+          </div>
+          <sc-for list="{{ recorrPays }}" as="p" hint-placeholder-count="5">
+            <div style="display:grid; grid-template-columns:1.8fr 0.9fr 1fr 0.9fr 1fr 1fr; gap:12px; align-items:center; padding:14px 20px; border-bottom:1px solid var(--eeds-ink-100)">
+              <span style="font-size:14px; font-weight:500; color:var(--eeds-ink-800)">{{ p.empresa }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:12px; color:var(--eeds-ink-600)">{{ p.comp }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-800); text-align:right">{{ p.mwhTxt }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-600); text-align:right">{{ p.rsTxt }}</span>
+              <span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800); text-align:right">{{ p.valorTxt }}</span>
+              <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ p.st.bg }}; color:{{ p.st.fg }}; border:1px solid {{ p.st.bd }}">{{ p.status }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ TREINAMENTOS ============ -->
+      <sc-if value="{{ show.treinamentos }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Treinamentos</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Vídeo-aulas para dominar o mercado livre e vender mais com a Echo.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px">
+          <sc-for list="{{ courses }}" as="c" hint-placeholder-count="6">
+            <div onClick="{{ c.open }}" style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden; cursor:pointer">
+              <div style="position:relative; height:140px; background:linear-gradient(135deg, var(--eeds-navy-600), var(--eeds-navy-800)); display:flex; align-items:center; justify-content:center">
+                <sc-if value="{{ c.lock }}" hint-placeholder-val="{{ false }}"><div style="position:absolute; inset:0; background:rgba(14,17,25,.55); display:flex; align-items:center; justify-content:center; color:#fff; font-size:28px">{{ ico.Lock }}</div></sc-if>
+                <sc-if value="{{ c.unlocked }}" hint-placeholder-val="{{ true }}"><div style="width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.16); backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; color:#fff; font-size:24px">{{ ico.Play }}</div></sc-if>
+                <span style="position:absolute; bottom:10px; right:10px; font-family:var(--eeds-font-mono); font-size:11px; color:#fff; background:rgba(14,17,25,.6); padding:2px 8px; border-radius:6px">{{ c.dur }}</span>
+              </div>
+              <div style="padding:16px">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px"><span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">{{ c.modulo }}</span><span style="font-size:11px; color:var(--eeds-ink-500)">{{ c.nivel }}</span></div>
+                <h3 style="font-family:var(--eeds-font-display); font-size:15px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 14px; line-height:1.35">{{ c.titulo }}</h3>
+                <div style="height:6px; background:var(--eeds-ink-100); border-radius:9999px; overflow:hidden; margin-bottom:8px"><div style="height:100%; width:{{ c.progW }}; background:var(--eeds-orange-400); border-radius:9999px"></div></div>
+                <div style="display:flex; align-items:center; justify-content:space-between"><span style="font-size:11px; font-weight:500; color:{{ c.stCol }}">{{ c.stTxt }}</span><span style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500)">{{ c.progTxt }}</span></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ NÍVEL ============ -->
+      <sc-if value="{{ show.nivel }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Nível de parceiro</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Quanto mais volume você fecha, maiores as suas comissões e benefícios.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:20px; margin-bottom:20px">
+          <div style="background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-900)); border-radius:16px; padding:28px; color:#fff; box-shadow:var(--eeds-shadow-card)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px">
+              <div style="width:48px; height:48px; border-radius:12px; background:rgba(249,115,22,.2); color:var(--eeds-orange-300); display:flex; align-items:center; justify-content:center; font-size:26px">{{ tierIco }}</div>
+              <div><p style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.6); margin:0">Seu nível atual</p><p style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; margin:2px 0 0">Parceiro {{ nivel }}</p></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px"><span style="font-size:12px; color:rgba(255,255,255,.7)">Progresso para {{ proxNivel }}</span><span style="font-family:var(--eeds-font-mono); font-size:12px; font-weight:600; color:var(--eeds-orange-300)">{{ nivelPct }}%</span></div>
+            <div style="height:10px; background:rgba(255,255,255,.15); border-radius:9999px; overflow:hidden; margin-bottom:8px"><div style="height:100%; width:{{ nivelPctW }}; background:linear-gradient(90deg, var(--eeds-orange-400), var(--eeds-orange-300)); border-radius:9999px"></div></div>
+            <p style="font-size:12px; color:rgba(255,255,255,.6); margin:0">Faltam 12 MW fechados nos próximos 12 meses para alcançar o próximo nível.</p>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 16px">Seus benefícios atuais</h3>
+            <div style="display:flex; flex-direction:column; gap:12px">
+              <sc-for list="{{ beneficios }}" as="b" hint-placeholder-count="5">
+                <div style="display:flex; align-items:center; gap:12px">
+                  <div style="width:32px; height:32px; border-radius:8px; flex-shrink:0; background:{{ b.iconBg }}; color:{{ b.iconFg }}; display:flex; align-items:center; justify-content:center; font-size:15px">{{ b.icoEl }}</div>
+                  <div style="min-width:0"><p style="font-size:13px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ b.nome }}</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:1px 0 0">{{ b.valor }}</p></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px">
+          <sc-for list="{{ tierCards }}" as="tc" hint-placeholder-count="4">
+            <div style="border-radius:14px; padding:20px; border:1px solid {{ tc.cardBd }}; background:{{ tc.cardBg }}; color:{{ tc.cardFg }}; box-shadow:var(--eeds-shadow-card)">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px">
+                <div style="font-size:24px; display:inline-flex; color:{{ tc.cor }}">{{ tc.icoEl }}</div>
+                <sc-if value="{{ tc.atual }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; background:var(--eeds-orange-400); color:#fff; padding:3px 8px; border-radius:9999px">Atual</span></sc-if>
+              </div>
+              <p style="font-family:var(--eeds-font-display); font-size:18px; font-weight:700; margin:0 0 2px">{{ tc.nome }}</p>
+              <p style="font-family:var(--eeds-font-mono); font-size:11px; opacity:.7; margin:0 0 16px">{{ tc.faixa }} fechados</p>
+              <div style="display:flex; flex-direction:column; gap:10px">
+                <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; opacity:.6; margin:0">Upfront</p><p style="font-family:var(--eeds-font-mono); font-size:15px; font-weight:600; margin:2px 0 0">{{ tc.upfront }}</p></div>
+                <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; opacity:.6; margin:0">Recorrência</p><p style="font-family:var(--eeds-font-mono); font-size:15px; font-weight:600; margin:2px 0 0">{{ tc.recorr }}</p></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ATENDIMENTO ============ -->
+      <sc-if value="{{ show.atendimento }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1400px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Atendimento</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Fale com o time de suporte ao parceiro e acompanhe seus chamados.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:start">
+          <!-- chat -->
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; box-shadow:var(--eeds-shadow-card); overflow:hidden; display:flex; flex-direction:column; height:560px">
+            <div style="display:flex; align-items:center; gap:12px; padding:16px 20px; background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-800)); color:#fff">
+              <div style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.14); display:flex; align-items:center; justify-content:center; font-size:18px">{{ ico.Headphones }}</div>
+              <div style="flex:1"><p style="font-size:14px; font-weight:600; margin:0">Suporte ao parceiro</p><p style="font-size:12px; color:rgba(255,255,255,.7); margin:2px 0 0; display:flex; align-items:center; gap:6px"><span style="width:7px; height:7px; border-radius:50%; background:var(--eeds-success-fg); display:inline-block"></span> Online · responde em até 5 min</p></div>
+            </div>
+            <div class="ee-scroll" style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px; background:var(--eeds-ink-50)">
+              <sc-for list="{{ chatMsgs }}" as="m" hint-placeholder-count="4">
+                <div style="display:flex; justify-content:{{ m.rowJustify }}">
+                  <div style="max-width:76%">
+                    <sc-if value="{{ m.nome }}" hint-placeholder-val="{{ false }}"><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:600; margin:0 0 4px 2px">{{ m.nome }}</p></sc-if>
+                    <div style="background:{{ m.bubbleBg }}; color:{{ m.bubbleFg }}; border:1px solid {{ m.bubbleBd }}; border-radius:14px; padding:10px 14px; font-size:14px; line-height:1.5">{{ m.txt }}</div>
+                    <p style="font-family:var(--eeds-font-mono); font-size:10px; color:var(--eeds-ink-400); margin:4px 2px 0; text-align:{{ m.rowJustify }}">{{ m.hora }}</p>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="padding:14px 16px; border-top:1px solid var(--eeds-ink-100); display:flex; align-items:center; gap:10px">
+              <button style="border:0; background:transparent; color:var(--eeds-ink-400); cursor:pointer; font-size:18px; display:inline-flex; padding:8px">{{ ico.Paperclip }}</button>
+              <input value="{{ chatDraft }}" onChange="{{ setChatDraft }}" onInput="{{ setChatDraft }}" onKeyDown="{{ chatKey }}" placeholder="Escreva sua mensagem..." style="flex:1; height:42px; padding:0 14px; border:1px solid var(--eeds-ink-200); border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none; background:var(--eeds-ink-50)" style-focus="background:#fff; border-color:var(--eeds-navy-600)">
+              <button onClick="{{ sendChat }}" style="width:42px; height:42px; flex-shrink:0; border:0; border-radius:10px; background:var(--eeds-orange-400); color:#fff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:18px">{{ ico.Send }}</button>
+            </div>
+            <p style="font-size:11px; color:var(--eeds-ink-400); text-align:center; padding:0 16px 12px; margin:0; display:flex; align-items:center; justify-content:center; gap:6px"><span style="font-size:12px; display:inline-flex">{{ ico.ShieldCheck }}</span> Suas mensagens são registradas e auditadas conforme LGPD</p>
+          </div>
+          <!-- casos -->
+          <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
+              <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Meus chamados</h3>
+              <button style="display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:15px; display:inline-flex">{{ ico.Plus }}</span> Abrir novo chamado</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <sc-for list="{{ casosAbertos }}" as="c" hint-placeholder-count="3">
+                <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; padding:16px; box-shadow:var(--eeds-shadow-sm); cursor:pointer">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px">
+                    <span style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500)">{{ c.id }}</span>
+                    <span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ c.st.bg }}; color:{{ c.st.fg }}; border:1px solid {{ c.st.bd }}">{{ c.status }}</span>
+                  </div>
+                  <p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0 0 10px; line-height:1.4">{{ c.assunto }}</p>
+                  <div style="display:flex; align-items:center; justify-content:space-between">
+                    <span style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500)">{{ c.criado }}</span>
+                    <span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ c.slaSt.bg }}; color:{{ c.slaSt.fg }}; border:1px solid {{ c.slaSt.bd }}">{{ c.sla }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ NOTIFICAÇÕES ============ -->
+      <sc-if value="{{ show.notificacoes }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:840px; margin:0 auto; width:100%">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px">
+          <div>
+            <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Notificações</h2>
+            <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Você tem {{ notifUnread }} notificações não lidas.</p>
+          </div>
+          <button onClick="{{ markAllRead }}" style="display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer"><span style="font-size:15px; display:inline-flex">{{ ico.CheckCheck }}</span> Marcar todas como lidas</button>
+        </div>
+        <sc-for list="{{ notifGroups }}" as="g" hint-placeholder-count="2">
+          <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:600; margin:18px 0 10px">{{ g.quando }}</p>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:12px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+            <sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3">
+              <div style="display:flex; align-items:flex-start; gap:14px; padding:16px 18px; border-bottom:1px solid var(--eeds-ink-100); position:relative">
+                <div style="width:40px; height:40px; border-radius:10px; flex-shrink:0; background:{{ n.iconBg }}; color:{{ n.iconFg }}; display:flex; align-items:center; justify-content:center; font-size:18px">{{ n.icoEl }}</div>
+                <div style="flex:1; min-width:0">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px">
+                    <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:600">{{ n.tipo }}</span>
+                    <sc-if value="{{ n.dot }}" hint-placeholder-val="{{ false }}"><span style="width:7px; height:7px; border-radius:50%; background:var(--eeds-orange-400); display:inline-block"></span></sc-if>
+                  </div>
+                  <p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0 0 2px">{{ n.titulo }}</p>
+                  <p style="font-size:13px; color:var(--eeds-ink-500); margin:0; line-height:1.45">{{ n.desc }}</p>
+                </div>
+                <span style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-400); flex-shrink:0; white-space:nowrap">{{ n.hora }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <!-- ============ CONTA ============ -->
+      <sc-if value="{{ show.conta }}" hint-placeholder-val="{{ false }}">
+      <div class="ee-fade" style="padding:24px; max-width:1000px; margin:0 auto; width:100%">
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:var(--eeds-font-display); font-size:24px; font-weight:700; color:var(--eeds-ink-800); margin:0; letter-spacing:-.02em">Conta</h2>
+          <p style="font-size:14px; color:var(--eeds-ink-500); margin:4px 0 0">Gerencie seus dados de usuário e o cadastro da empresa parceira.</p>
+        </div>
+        <div style="display:inline-flex; background:var(--eeds-ink-100); border-radius:10px; padding:3px; margin-bottom:20px">
+          <button onClick="{{ setContaUsuario }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ contaUsuarioBg }}; color:{{ contaUsuarioFg }}">Meus dados</button>
+          <button onClick="{{ setContaParceiro }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ contaParceiroBg }}; color:{{ contaParceiroFg }}">Cadastro do parceiro</button>
+          <button onClick="{{ setContaAgentes }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ contaAgentesBg }}; color:{{ contaAgentesFg }}">Agentes de venda</button>
+          <button onClick="{{ setContaNotificacoes }}" style="height:34px; padding:0 18px; border:0; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; background:{{ contaNotifBg }}; color:{{ contaNotifFg }}">Notificações</button>
+        </div>
+
+        <!-- meus dados -->
+        <sc-if value="{{ contaUsuario }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start">
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card); text-align:center">
+            <div style="width:80px; height:80px; border-radius:50%; margin:0 auto 14px; background:linear-gradient(135deg, var(--eeds-navy-600), var(--eeds-navy-800)); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--eeds-font-display); font-size:26px; font-weight:600">RC</div>
+            <p style="font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Renata Campos</p>
+            <p style="font-size:13px; color:var(--eeds-ink-500); margin:2px 0 14px">Consultora comercial</p>
+            <button style="width:100%; height:38px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer">Alterar foto</button>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 18px">Dados pessoais</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Nome completo</p><input value="Renata Campos" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">CPF</p><input value="148.220.331-09" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">E-mail</p><input value="renata.campos@solarengconsultoria.com.br" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Celular</p><input value="(31) 99145-2208" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--eeds-ink-100)">
+              <h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0 0 18px">Segurança</h3>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid var(--eeds-ink-200); border-radius:10px; margin-bottom:10px">
+                <div style="display:flex; align-items:center; gap:12px"><span style="font-size:18px; display:inline-flex; color:var(--eeds-ink-400)">{{ ico.Lock }}</span><div><p style="font-size:13px; font-weight:500; color:var(--eeds-ink-800); margin:0">Senha de acesso</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:1px 0 0">Alterada há 3 meses</p></div></div>
+                <button style="height:34px; padding:0 14px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; cursor:pointer">Alterar</button>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid var(--eeds-ink-200); border-radius:10px">
+                <div style="display:flex; align-items:center; gap:12px"><span style="font-size:18px; display:inline-flex; color:var(--eeds-ink-400)">{{ ico.ShieldCheck }}</span><div><p style="font-size:13px; font-weight:500; color:var(--eeds-ink-800); margin:0">Verificação em duas etapas</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:1px 0 0">Código por e-mail a cada acesso</p></div></div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:3px 10px; border-radius:9999px; background:var(--eeds-success-bg); color:var(--eeds-success-fg); border:1px solid var(--eeds-success-border)">Ativada</span>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px">
+              <button style="height:42px; padding:0 18px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer">Cancelar</button>
+              <button style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Save }}</span> Salvar alterações</button>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- cadastro do parceiro -->
+        <sc-if value="{{ contaParceiro }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; gap:16px">
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px">
+              <div style="width:44px; height:44px; border-radius:10px; background:var(--eeds-navy-50); color:var(--eeds-navy-700); display:flex; align-items:center; justify-content:center; font-size:20px">{{ ico.Building2 }}</div>
+              <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Dados da empresa</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">Razão social e identificação fiscal do parceiro</p></div>
+            </div>
+            <div style="display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Razão social</p><input value="SolarEng Consultoria em Energia Ltda" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">CNPJ</p><input value="29.482.110/0001-55" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Tipo de parceiro</p><input value="Escritório de engenharia" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Telefone comercial</p><input value="(31) 3045-7700" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Site</p><input value="solarengconsultoria.com.br" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px">
+              <div style="width:44px; height:44px; border-radius:10px; background:var(--eeds-ink-100); color:var(--eeds-ink-600); display:flex; align-items:center; justify-content:center; font-size:20px">{{ ico.MapPin }}</div>
+              <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Endereço</h3></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 2fr 1fr; gap:16px; margin-bottom:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">CEP</p><input value="30130-110" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Logradouro</p><input value="Av. Afonso Pena, 1500 · Sala 1204" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">UF</p><input value="MG" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Cidade</p><input value="Belo Horizonte" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; padding:24px; box-shadow:var(--eeds-shadow-card)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px">
+              <div style="width:44px; height:44px; border-radius:10px; background:var(--eeds-orange-50); color:var(--eeds-orange-500); display:flex; align-items:center; justify-content:center; font-size:20px">{{ ico.Banknote }}</div>
+              <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Dados bancários para repasse de comissão</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">Conta onde os pagamentos upfront e recorrentes são creditados</p></div>
+            </div>
+            <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; margin-bottom:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Banco</p><input value="341 · Itaú Unibanco" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Agência</p><input value="1582" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Conta corrente</p><input value="48210-0" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Chave PIX</p><input value="29.482.110/0001-55" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Titular</p><input value="SolarEng Consultoria em Energia Ltda" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; background:var(--eeds-info-bg); border:1px solid var(--eeds-info-border); color:var(--eeds-info-fg); border-radius:8px; padding:10px 12px; font-size:12px; margin-top:16px"><span style="font-size:15px; display:inline-flex">{{ ico.Info }}</span> Alterações nos dados bancários passam por validação do back-office antes do próximo repasse.</div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px">
+            <button style="height:42px; padding:0 18px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer">Cancelar</button>
+            <button style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Save }}</span> Salvar cadastro</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- agentes de venda -->
+        <sc-if value="{{ contaAgentes }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; gap:16px">
+          <div style="display:flex; align-items:flex-start; gap:8px; background:var(--eeds-navy-50); border:1px solid var(--eeds-navy-100); border-radius:12px; padding:14px 16px">
+            <span style="font-size:18px; display:inline-flex; color:var(--eeds-navy-600); flex-shrink:0">{{ ico.Info }}</span>
+            <p style="font-size:13px; color:var(--eeds-navy-700); margin:0; line-height:1.5">Agentes de venda são usuários da sua equipe com acesso ao portal. Cada agente visualiza apenas os clientes que ele originou; administradores enxergam toda a carteira do parceiro.</p>
+          </div>
+          <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 20px 14px">
+              <div><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Equipe de vendas</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">{{ agentesCount }} usuários com acesso ao portal</p></div>
+              <button onClick="{{ openInvite }}" style="display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:8px; font-family:var(--eeds-font-body); font-size:13px; font-weight:500; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:15px; display:inline-flex">{{ ico.UserPlus }}</span> Convidar agente</button>
+            </div>
+            <div style="display:grid; grid-template-columns:2.4fr 1.4fr 1fr 1.1fr 36px; gap:12px; padding:10px 20px; background:var(--eeds-ink-50); border-top:1px solid var(--eeds-ink-200); border-bottom:1px solid var(--eeds-ink-200)">
+              <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Agente</span>
+              <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Acesso à carteira</span>
+              <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:right">Clientes</span>
+              <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Status</span>
+              <span></span>
+            </div>
+            <sc-for list="{{ agentes }}" as="a" hint-placeholder-count="4">
+              <div style="display:grid; grid-template-columns:2.4fr 1.4fr 1fr 1.1fr 36px; gap:12px; align-items:center; padding:14px 20px; border-bottom:1px solid var(--eeds-ink-100)">
+                <div style="display:flex; align-items:center; gap:12px; min-width:0">
+                  <div style="width:38px; height:38px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg, var(--eeds-navy-600), var(--eeds-navy-800)); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600">{{ a.ini }}</div>
+                  <div style="min-width:0">
+                    <div style="display:flex; align-items:center; gap:8px"><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ a.nome }}</p><sc-if value="{{ a.admin }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px; font-weight:600; color:var(--eeds-navy-700); background:var(--eeds-navy-50); border:1px solid var(--eeds-navy-200); border-radius:9999px; padding:1px 7px">Admin</span></sc-if></div>
+                    <p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">{{ a.email }}</p>
+                  </div>
+                </div>
+                <span style="font-size:13px; color:var(--eeds-ink-700)">{{ a.acesso }}</span>
+                <span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800); text-align:right">{{ a.clientesTxt }}</span>
+                <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:2px 8px; border-radius:9999px; background:{{ a.st.bg }}; color:{{ a.st.fg }}; border:1px solid {{ a.st.bd }}">{{ a.status }}</span></span>
+                <button style="border:0; background:transparent; color:var(--eeds-ink-400); cursor:pointer; font-size:16px; display:inline-flex; justify-content:center; padding:4px">{{ ico.MoreHorizontal }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- configuração de notificações -->
+        <sc-if value="{{ contaNotificacoes }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff; border:1px solid var(--eeds-ink-200); border-radius:16px; box-shadow:var(--eeds-shadow-card); overflow:hidden">
+          <div style="padding:20px 24px 14px"><h3 style="font-family:var(--eeds-font-display); font-size:16px; font-weight:600; color:var(--eeds-ink-800); margin:0">Configuração de notificações</h3><p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 0">Defina como deseja ser avisado em cada tipo de evento.</p></div>
+          <div style="display:grid; grid-template-columns:1fr 90px 90px; gap:12px; padding:10px 24px; background:var(--eeds-ink-50); border-top:1px solid var(--eeds-ink-200); border-bottom:1px solid var(--eeds-ink-200)">
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500">Evento</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:center">E-mail</span>
+            <span style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; text-align:center">Portal</span>
+          </div>
+          <sc-for list="{{ notifRows }}" as="n" hint-placeholder-count="5">
+            <div style="display:grid; grid-template-columns:1fr 90px 90px; gap:12px; align-items:center; padding:14px 24px; border-bottom:1px solid var(--eeds-ink-100)">
+              <div style="display:flex; align-items:center; gap:12px; min-width:0">
+                <div style="width:36px; height:36px; border-radius:8px; flex-shrink:0; background:{{ n.iconBg }}; color:{{ n.iconFg }}; display:flex; align-items:center; justify-content:center; font-size:16px">{{ n.icoEl }}</div>
+                <div style="min-width:0"><p style="font-size:14px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ n.label }}</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:1px 0 0">{{ n.desc }}</p></div>
+              </div>
+              <div style="display:flex; justify-content:center">
+                <div onClick="{{ n.toggleEmail }}" style="width:38px; height:22px; border-radius:9999px; padding:2px; cursor:pointer; background:{{ n.emailTrackBg }}; transition:background var(--eeds-d-base) var(--eeds-ease-standard); display:flex; justify-content:{{ n.emailKnob }}"><div style="width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--eeds-shadow-sm)"></div></div>
+              </div>
+              <div style="display:flex; justify-content:center">
+                <div onClick="{{ n.togglePortal }}" style="width:38px; height:22px; border-radius:9999px; padding:2px; cursor:pointer; background:{{ n.portalTrackBg }}; transition:background var(--eeds-d-base) var(--eeds-ease-standard); display:flex; justify-content:{{ n.portalKnob }}"><div style="width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--eeds-shadow-sm)"></div></div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display:flex; justify-content:flex-end; gap:8px; padding:18px 24px">
+            <button style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Save }}</span> Salvar preferências</button>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+      <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeDrawer }}" style="position:fixed; inset:0; z-index:60; background:rgba(14,17,25,.4); backdrop-filter:blur(2px); display:flex; justify-content:flex-end">
+        <div onClick="{{ stop }}" class="ee-scroll" style="width:440px; max-width:92vw; height:100%; background:#fff; box-shadow:var(--eeds-shadow-modal); overflow-y:auto">
+          <sc-if value="{{ isLeadDrawer }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:24px">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px">
+              <div style="display:flex; align-items:center; gap:12px">
+                <div style="width:44px; height:44px; border-radius:10px; background:var(--eeds-navy-50); color:var(--eeds-navy-700); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600">{{ dLeadIni }}</div>
+                <div><p style="font-family:var(--eeds-font-display); font-size:17px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ dLead.empresa }}</p><p style="font-family:var(--eeds-font-mono); font-size:11px; color:var(--eeds-ink-500); margin:2px 0 0">{{ dLead.id }}</p></div>
+              </div>
+              <button onClick="{{ closeDrawer }}" style="border:0; background:var(--eeds-ink-100); width:32px; height:32px; border-radius:8px; cursor:pointer; color:var(--eeds-ink-600); display:inline-flex; align-items:center; justify-content:center; font-size:16px">{{ ico.X }}</button>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px">
+              <div style="background:var(--eeds-ink-50); border-radius:10px; padding:12px"><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); margin:0">Submercado</p><p style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:4px 0 0">{{ dLead.sub }}</p></div>
+              <div style="background:var(--eeds-ink-50); border-radius:10px; padding:12px"><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); margin:0">Demanda</p><p style="font-family:var(--eeds-font-mono); font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:4px 0 0">{{ dLead.mwTxt }}</p></div>
+            </div>
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0 0 10px">Contato principal</p>
+            <div style="border:1px solid var(--eeds-ink-200); border-radius:12px; padding:16px; margin-bottom:20px">
+              <p style="font-size:15px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ dLead.contato }}</p>
+              <p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 14px">{{ dLead.cargo }}</p>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px"><span style="font-size:16px; display:inline-flex; color:var(--eeds-ink-400)">{{ ico.Phone }}</span><span style="font-family:var(--eeds-font-mono); font-size:13px; color:var(--eeds-ink-700)">{{ dLead.fone }}</span></div>
+              <div style="display:flex; align-items:center; gap:10px"><span style="font-size:16px; display:inline-flex; color:var(--eeds-ink-400)">{{ ico.Mail }}</span><span style="font-size:13px; color:var(--eeds-ink-700)">{{ dLead.email }}</span></div>
+            </div>
+            <div style="display:flex; gap:8px">
+              <button onClick="{{ goCotacao }}" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer"><span style="font-size:16px; display:inline-flex">{{ ico.ArrowUpRight }}</span> Criar oportunidade</button>
+              <button style="display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:10px; font-size:16px; cursor:pointer">{{ ico.PhoneCall }}</button>
+            </div>
+          </div>
+          </sc-if>
+          <sc-if value="{{ isOppDrawer }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:24px">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); margin:0">Oportunidade</p><p style="font-family:var(--eeds-font-display); font-size:18px; font-weight:600; color:var(--eeds-ink-800); margin:4px 0 0">{{ dOpp.empresa }}</p></div>
+              <button onClick="{{ closeDrawer }}" style="border:0; background:var(--eeds-ink-100); width:32px; height:32px; border-radius:8px; cursor:pointer; color:var(--eeds-ink-600); display:inline-flex; align-items:center; justify-content:center; font-size:16px">{{ ico.X }}</button>
+            </div>
+            <div style="background:linear-gradient(135deg,var(--eeds-navy-700),var(--eeds-navy-800)); border-radius:12px; padding:20px; color:#fff; margin-bottom:16px">
+              <p style="font-size:11px; color:rgba(255,255,255,.6); margin:0">Valor estimado do contrato</p>
+              <p style="font-family:var(--eeds-font-display); font-size:28px; font-weight:700; margin:6px 0 0">R$ {{ dOppValor }} mi</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--eeds-ink-100)"><span style="font-size:13px; color:var(--eeds-ink-600)">Demanda média</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800)">{{ dOppMw }} MW</span></div>
+              <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--eeds-ink-100)"><span style="font-size:13px; color:var(--eeds-ink-600)">Prazo</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800)">{{ dOppPrazo }} meses</span></div>
+              <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--eeds-ink-100)"><span style="font-size:13px; color:var(--eeds-ink-600)">Probabilidade</span><span style="font-family:var(--eeds-font-mono); font-size:13px; font-weight:600; color:var(--eeds-ink-800)">{{ dOppProb }}%</span></div>
+            </div>
+            <button onClick="{{ goCotacao }}" style="width:100%; margin-top:20px; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer"><span style="font-size:16px; display:inline-flex">{{ ico.Calculator }}</span> Atualizar cotação</button>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ VIDEO MODAL ============ -->
+      <sc-if value="{{ videoOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeVideo }}" style="position:fixed; inset:0; z-index:70; background:rgba(14,17,25,.6); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px">
+        <div onClick="{{ stop }}" style="width:760px; max-width:94vw; background:#fff; border-radius:16px; overflow:hidden; box-shadow:var(--eeds-shadow-modal)">
+          <div style="position:relative; aspect-ratio:16/9; background:linear-gradient(135deg, var(--eeds-navy-700), var(--eeds-navy-900)); display:flex; align-items:center; justify-content:center">
+            <div style="width:72px; height:72px; border-radius:50%; background:var(--eeds-orange-400); color:#fff; display:flex; align-items:center; justify-content:center; font-size:30px; cursor:pointer; box-shadow:var(--eeds-shadow-pop)">{{ ico.Play }}</div>
+            <button onClick="{{ closeVideo }}" style="position:absolute; top:14px; right:14px; border:0; background:rgba(255,255,255,.15); color:#fff; width:34px; height:34px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:18px">{{ ico.X }}</button>
+          </div>
+          <div style="padding:20px 24px">
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-500); font-weight:500; margin:0">{{ videoModulo }} · {{ videoDur }}</p>
+            <h3 style="font-family:var(--eeds-font-display); font-size:18px; font-weight:600; color:var(--eeds-ink-800); margin:6px 0 0">{{ videoTitle }}</h3>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CONVIDAR AGENTE (MODAL) ============ -->
+      <sc-if value="{{ inviteOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeInvite }}" style="position:fixed; inset:0; z-index:70; background:rgba(14,17,25,.4); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px">
+        <div onClick="{{ stop }}" class="ee-scroll" style="width:620px; max-width:94vw; max-height:90vh; overflow-y:auto; background:#fff; border-radius:16px; box-shadow:var(--eeds-shadow-modal)">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; padding:24px 24px 0">
+            <div>
+              <h3 style="font-family:var(--eeds-font-display); font-size:18px; font-weight:600; color:var(--eeds-ink-800); margin:0">Convidar agente</h3>
+              <p style="font-size:13px; color:var(--eeds-ink-500); margin:4px 0 0">Envie um convite por e-mail e defina o perfil de acesso ao portal.</p>
+            </div>
+            <button onClick="{{ closeInvite }}" style="border:0; background:var(--eeds-ink-100); width:32px; height:32px; border-radius:8px; cursor:pointer; color:var(--eeds-ink-600); display:inline-flex; align-items:center; justify-content:center; font-size:16px">{{ ico.X }}</button>
+          </div>
+          <div style="padding:20px 24px">
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:600; margin:0 0 10px">Dados do agente</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px">
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Nome</p><input placeholder="Nome" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Sobrenome</p><input placeholder="Sobrenome" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">E-mail</p><input placeholder="email@empresa.com.br" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-body); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+              <div><p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:0 0 6px">Telefone</p><input placeholder="(00) 00000-0000" style="width:100%; height:42px; padding:0 12px; border:1px solid var(--eeds-ink-200); border-radius:8px; font-family:var(--eeds-font-mono); font-size:14px; color:var(--eeds-ink-800); outline:none" style-focus="border-color:var(--eeds-navy-600)"></div>
+            </div>
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:500; margin:18px 0 10px">Perfil de acesso</p>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <sc-for list="{{ perfis }}" as="p" hint-placeholder-count="3">
+                <div onClick="{{ p.pick }}" style="display:flex; gap:14px; padding:16px; border:1px solid {{ p.cardBd }}; box-shadow:{{ p.ring }}; background:{{ p.cardBg }}; border-radius:12px; cursor:pointer; transition:background var(--eeds-d-base) var(--eeds-ease-standard), border-color var(--eeds-d-base) var(--eeds-ease-standard)">
+                  <div style="width:40px; height:40px; border-radius:10px; flex-shrink:0; background:{{ p.iconBg }}; color:{{ p.iconFg }}; display:flex; align-items:center; justify-content:center; font-size:18px">{{ p.icoEl }}</div>
+                  <div style="flex:1; min-width:0">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+                      <p style="font-size:14px; font-weight:600; color:var(--eeds-ink-800); margin:0">{{ p.nome }}</p>
+                      <span style="width:18px; height:18px; border-radius:50%; flex-shrink:0; border:2px solid {{ p.radioBd }}; display:inline-flex; align-items:center; justify-content:center">
+                        <sc-if value="{{ p.radioOn }}" hint-placeholder-val="{{ false }}"><span style="width:9px; height:9px; border-radius:50%; background:var(--eeds-navy-600)"></span></sc-if>
+                      </span>
+                    </div>
+                    <p style="font-size:12px; color:var(--eeds-ink-500); margin:2px 0 10px">{{ p.resumo }}</p>
+                    <div style="display:flex; flex-direction:column; gap:5px">
+                      <sc-for list="{{ p.bullets }}" as="b" hint-placeholder-count="3">
+                        <div style="display:flex; align-items:flex-start; gap:8px"><span style="font-size:14px; display:inline-flex; color:var(--eeds-success-fg); flex-shrink:0; margin-top:1px">{{ checkIco }}</span><span style="font-size:13px; color:var(--eeds-ink-700); line-height:1.45">{{ b }}</span></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <p style="font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--eeds-ink-600); font-weight:600; margin:20px 0 10px">Configuração de notificações</p>
+            <p style="font-size:12px; color:var(--eeds-ink-500); margin:0 0 12px">Escolha sobre o que este agente será avisado por e-mail e no portal.</p>
+            <div style="border:1px solid var(--eeds-ink-200); border-radius:12px; overflow:hidden">
+              <sc-for list="{{ notifPrefs }}" as="n" hint-placeholder-count="4">
+                <div onClick="{{ n.toggle }}" style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid var(--eeds-ink-100); cursor:pointer">
+                  <div style="width:34px; height:34px; border-radius:8px; flex-shrink:0; background:{{ n.iconBg }}; color:{{ n.iconFg }}; display:flex; align-items:center; justify-content:center; font-size:16px">{{ n.icoEl }}</div>
+                  <div style="flex:1; min-width:0"><p style="font-size:13px; font-weight:500; color:var(--eeds-ink-800); margin:0">{{ n.label }}</p><p style="font-size:12px; color:var(--eeds-ink-500); margin:1px 0 0">{{ n.desc }}</p></div>
+                  <div style="width:38px; height:22px; border-radius:9999px; flex-shrink:0; padding:2px; background:{{ n.trackBg }}; transition:background var(--eeds-d-base) var(--eeds-ease-standard); display:flex; justify-content:{{ n.knobJustify }}">
+                    <div style="width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--eeds-shadow-sm)"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; padding:0 24px 24px">
+            <button onClick="{{ closeInvite }}" style="height:42px; padding:0 18px; border:1px solid var(--eeds-ink-300); background:#fff; color:var(--eeds-ink-700); border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:500; cursor:pointer">Cancelar</button>
+            <button onClick="{{ closeInvite }}" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border:0; background:var(--eeds-orange-400); color:#fff; border-radius:10px; font-family:var(--eeds-font-body); font-size:14px; font-weight:600; cursor:pointer; box-shadow:var(--eeds-shadow-sm)"><span style="font-size:16px; display:inline-flex">{{ ico.Send }}</span> Enviar convite</button>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+    </div>
+  </main>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;nivelParceiro&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Bronze&quot;,&quot;Prata&quot;,&quot;Ouro&quot;,&quot;Diamante&quot;],&quot;default&quot;:&quot;Bronze&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;dashboardVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Resumo executivo&quot;,&quot;Foco em comissões&quot;],&quot;default&quot;:&quot;Foco em comissões&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'dashboard',
+    loggedIn: false,
+    loginStep: 'email',
+    qVolume: 2.5,
+    qPrazo: 36,
+    qPreco: 285,
+    qUpfront: null,
+    qRecorr: null,
+    quoteVariant: 'guiado',
+    pipelineView: 'kanban',
+    drawer: null,
+    payTab: 'upfront',
+    video: null,
+    tierView: 'jornada',
+    contaTab: 'usuario',
+    userMenuOpen: false,
+    inviteOpen: false,
+    invitePerfil: 'agente',
+    invNotif: { comissao:true, oportunidade:true, suporte:true, novidades:false },
+    contaNotif: { comissaoEmail:true, comissaoPortal:true, oportEmail:true, oportPortal:true, propostaEmail:true, propostaPortal:true, suporteEmail:false, suportePortal:true, novidadesEmail:false, novidadesPortal:false },
+    chatDraft: '',
+    chatMsgs: [
+      { from:'agent', nome:'Echo · Suporte ao parceiro', txt:'Olá, Renata. Sou a Lúcia, do time de suporte ao parceiro. Como posso ajudar hoje?', hora:'09:12' },
+      { from:'me', txt:'Bom dia! A comissão recorrente da Cooperativa Agro Sul de maio ainda aparece como "em análise". Consegue verificar?', hora:'09:14' },
+      { from:'agent', nome:'Echo · Suporte ao parceiro', txt:'Claro. O repasse de maio foi conciliado com a CCEE e já está aprovado — cai na sua conta dia 30/06 junto com a competência de junho.', hora:'09:16' },
+      { from:'me', txt:'Perfeito, obrigada!', hora:'09:16' },
+    ],
+  };
+
+  componentDidMount() {
+    if (window.lucide) { try { window.lucide.createIcons(); } catch(e){} }
+    this._iv = setInterval(() => {
+      if (window.lucide && window.lucide.icons) { clearInterval(this._iv); this.forceUpdate(); }
+    }, 100);
+  }
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  fmt(n, d) { d = d || 0; return Number(n).toLocaleString('pt-BR', { style:'currency', currency:'BRL', minimumFractionDigits:d, maximumFractionDigits:d }); }
+  num(n, d) { d = d || 0; return Number(n).toLocaleString('pt-BR', { minimumFractionDigits:d, maximumFractionDigits:d }); }
+
+  tiers() {
+    return {
+      Bronze:   { nome:'Bronze',   upfront:1.0, recorr:1.0, cor:'#9098AB', precoBase:false, atualMW:0,  proxMW:5,  prox:'Prata' },
+      Prata:    { nome:'Prata',    upfront:1.5, recorr:1.5, cor:'#646E85', precoBase:false, atualMW:5,  proxMW:15, prox:'Ouro' },
+      Ouro:     { nome:'Ouro',     upfront:2.0, recorr:2.0, cor:'#F97316', precoBase:true,  atualMW:15, proxMW:40, prox:'Diamante' },
+      Diamante: { nome:'Diamante', upfront:2.5, recorr:3.0, cor:'#1E2C7A', precoBase:true,  atualMW:40, proxMW:null, prox:null },
+    };
+  }
+
+  icoNames() {
+    return ['LayoutDashboard','Users','Workflow','Calculator','Handshake','Wallet','GraduationCap','Award','Search','Bell','ChevronDown','ChevronRight','ChevronLeft','ChevronUp','Plus','ArrowRight','ArrowLeft','Download','Send','X','Check','CircleCheck','Clock','TrendingUp','TrendingDown','Zap','MapPin','Phone','Mail','Building2','Play','Lock','Star','FileText','Repeat','Filter','LogOut','Sparkles','Target','Percent','Calendar','FileDown','Eye','PlayCircle','CircleDollarSign','BadgeCheck','Briefcase','UserPlus','PhoneCall','SlidersHorizontal','ArrowUpRight','Crown','Gem','Medal','ShieldCheck','Info','ExternalLink','MoreHorizontal','Pencil','FileSignature','Receipt','HandCoins','Lightbulb','Quote','CheckCheck','Headphones','Paperclip','CreditCard','Banknote','AtSign','Smartphone','Save','MessageSquare','BellRing','Trash2','Settings','ShieldCheck','MapPin','User','Globe'];
+  }
+  buildIco() {
+    const out = {};
+    const L = window.lucide;
+    this.icoNames().forEach(n => {
+      const data = L && L.icons && L.icons[n];
+      if (data) {
+        const kids = data.map((node, i) => React.createElement(node[0], Object.assign({ key: i }, node[1])));
+        out[n] = React.createElement('svg', { width:'1em', height:'1em', viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:1.75, strokeLinecap:'round', strokeLinejoin:'round', style:{ display:'block' } }, kids);
+      } else { out[n] = null; }
+    });
+    return out;
+  }
+
+  nav(ico) {
+    const s = this.state.screen;
+    const items = [
+      { id:'dashboard',    label:'Visão geral',    icon:'LayoutDashboard' },
+      { id:'leads',        label:'Leads',          icon:'Users', badge:'3' },
+      { id:'oportunidades',label:'Oportunidades',  icon:'Workflow' },
+      { id:'cotacao',      label:'Cotações',       icon:'Calculator' },
+      { id:'negociacoes',  label:'Negociações',    icon:'Handshake' },
+      { id:'pagamentos',   label:'Pagamentos',     icon:'Wallet' },
+      { id:'treinamentos', label:'Treinamentos',   icon:'GraduationCap' },
+      { id:'nivel',        label:'Nível de parceiro', icon:'Award' },
+      { id:'__sep',        label:'Conta & suporte', sep:true },
+      { id:'atendimento',  label:'Atendimento',    icon:'Headphones', badge:'1' },
+      { id:'notificacoes', label:'Notificações',   icon:'Bell' },
+      { id:'conta',        label:'Conta',          icon:'Building2' },
+    ];
+    return items.map(it => {
+      if (it.sep) return { sep:true, label: it.label };
+      const active = s === it.id;
+      return {
+        sep: false,
+        label: it.label,
+        icoEl: ico[it.icon],
+        active: active,
+        isButton: true,
+        badge: it.badge || null,
+        bg: active ? 'var(--eeds-navy-50)' : 'transparent',
+        fg: active ? 'var(--eeds-navy-700)' : 'var(--eeds-ink-600)',
+        onClick: () => this.setState({ screen: it.id }),
+      };
+    });
+  }
+
+  computeQuote(nivel) {
+    const t = this.tiers()[nivel];
+    const upPct = this.state.qUpfront == null ? t.upfront : this.state.qUpfront;
+    const recRS = this.state.qRecorr == null ? t.recorr : this.state.qRecorr;
+    const fator = 0.6;
+    const mwhMes = this.state.qVolume * 730 * fator;
+    const valorMes = mwhMes * this.state.qPreco;
+    const valorTotal = valorMes * this.state.qPrazo;
+    const upfront = valorTotal * upPct / 100;
+    const recorrMes = mwhMes * recRS;
+    const recorrTotal = recorrMes * this.state.qPrazo;
+    const total = upfront + recorrTotal;
+    return { upPct, recRS, mwhMes, valorMes, valorTotal, upfront, recorrMes, recorrTotal, total };
+  }
+
+  renderVals() {
+    const ico = this.buildIco();
+    const nivel = this.props.nivelParceiro || 'Ouro';
+    const t = this.tiers()[nivel];
+    const dashVariant = this.props.dashboardVariant || 'Resumo executivo';
+    const s = this.state.screen;
+    const fmt = (n,d) => this.fmt(n,d);
+
+    // login
+    const show = {
+      login: !this.state.loggedIn,
+      loginEmail: this.state.loginStep === 'email',
+      loginOtp: this.state.loginStep === 'otp',
+      app: this.state.loggedIn,
+      dashboard: s === 'dashboard',
+      leads: s === 'leads',
+      oportunidades: s === 'oportunidades',
+      cotacao: s === 'cotacao',
+      negociacoes: s === 'negociacoes',
+      pagamentos: s === 'pagamentos',
+      treinamentos: s === 'treinamentos',
+      nivel: s === 'nivel',
+      atendimento: s === 'atendimento',
+      notificacoes: s === 'notificacoes',
+      conta: s === 'conta',
+    };
+
+    const titles = { dashboard:'Visão geral', leads:'Leads', oportunidades:'Oportunidades', cotacao:'Cotações', negociacoes:'Negociações', pagamentos:'Pagamentos', treinamentos:'Treinamentos', nivel:'Nível de parceiro', atendimento:'Atendimento', notificacoes:'Notificações', conta:'Conta' };
+
+    // nível progress
+    const nivelPct = t.proxMW ? Math.round((t.atualMW + 7) / t.proxMW * 100) : 100;
+    const proxNivel = t.prox || 'Topo';
+
+    // dashboard KPIs
+    const kpis = [
+      { label:'Comissão do mês', value:fmt(48720), unit:'', change:'+12%', trend:'up', icon:'CircleDollarSign', accent:'navy' },
+      { label:'Recorrência ativa', value:fmt(21340), unit:'/mês', change:'+4%', trend:'up', icon:'Repeat', accent:'orange' },
+      { label:'Pipeline ativo', value:'R$ 11,2', unit:'mi', change:'+2', trend:'up', icon:'Workflow', accent:'info' },
+      { label:'Contratos fechados', value:'14', unit:'no ano', change:'+3', trend:'up', icon:'Handshake', accent:'success' },
+    ];
+    const accentMap = {
+      navy:{bg:'var(--eeds-navy-50)',fg:'var(--eeds-navy-600)'},
+      orange:{bg:'var(--eeds-orange-50)',fg:'var(--eeds-orange-500)'},
+      info:{bg:'var(--eeds-info-bg)',fg:'var(--eeds-info-fg)'},
+      success:{bg:'var(--eeds-success-bg)',fg:'var(--eeds-success-fg)'},
+    };
+    const kpiVals = kpis.map(k => ({
+      label:k.label, value:k.value, unit:k.unit, change:k.change,
+      icoEl: ico[k.icon],
+      accentBg: accentMap[k.accent].bg, accentFg: accentMap[k.accent].fg,
+      trendBg: k.trend==='up'?'var(--eeds-success-bg)':'var(--eeds-danger-bg)',
+      trendFg: k.trend==='up'?'var(--eeds-success-fg)':'var(--eeds-danger-fg)',
+      trendIco: k.trend==='up'?ico.TrendingUp:ico.TrendingDown,
+    }));
+
+    const chartRaw = [
+      {label:'Nov', up:18, rec:9}, {label:'Dez', up:26, rec:11}, {label:'Jan', up:14, rec:13}, {label:'Fev', up:31, rec:15},
+      {label:'Mar', up:22, rec:16}, {label:'Abr', up:38, rec:18}, {label:'Mai', up:29, rec:20}, {label:'Jun', up:27, rec:21},
+    ];
+    const maxBar = 60;
+    const chartBars = chartRaw.map(b => ({ label:b.label, upH:(b.up/maxBar*170)+'px', recH:(b.rec/maxBar*170)+'px' }));
+
+    const funil = [
+      { stage:'Qualificação', qtd:'6', valor:fmt(3800000), w:'85%', cor:'var(--eeds-ink-400)' },
+      { stage:'Proposta enviada', qtd:'4', valor:fmt(4200000), w:'62%', cor:'var(--eeds-info-fg)' },
+      { stage:'Negociação', qtd:'3', valor:fmt(2600000), w:'44%', cor:'var(--eeds-warning-fg)' },
+      { stage:'Fechamento', qtd:'2', valor:fmt(1900000), w:'28%', cor:'var(--eeds-success-fg)' },
+    ];
+
+    const stMap = {
+      'Programado':{bg:'var(--eeds-info-bg)',fg:'var(--eeds-info-fg)',bd:'var(--eeds-info-border)'},
+      'Pago':{bg:'var(--eeds-success-bg)',fg:'var(--eeds-success-fg)',bd:'var(--eeds-success-border)'},
+      'Em análise':{bg:'var(--eeds-warning-bg)',fg:'var(--eeds-warning-fg)',bd:'var(--eeds-warning-border)'},
+    };
+    const proxRepassesRaw = [
+      { empresa:'Cerâmica Planalto', tipo:'Upfront', quando:'Vence 28/06', valor:fmt(38400), status:'Programado', up:true },
+      { empresa:'Frigorífico Vale Verde', tipo:'Recorrência · jun/26', quando:'Vence 30/06', valor:fmt(6210), status:'Em análise', up:false },
+      { empresa:'Indústria Beta Plásticos', tipo:'Recorrência · jun/26', quando:'Vence 30/06', valor:fmt(4980), status:'Programado', up:false },
+      { empresa:'Cooperativa Agro Sul', tipo:'Upfront', quando:'Pago 12/06', valor:fmt(52100), status:'Pago', up:true },
+    ];
+    const proxRepasses = proxRepassesRaw.map(r => ({
+      empresa:r.empresa, tipo:r.tipo, quando:r.quando, valor:r.valor, status:r.status,
+      icoEl: r.up?ico.HandCoins:ico.Repeat,
+      tagBg: r.up?'var(--eeds-navy-50)':'var(--eeds-orange-50)', tagFg: r.up?'var(--eeds-navy-600)':'var(--eeds-orange-500)',
+      stBg: stMap[r.status].bg, stFg: stMap[r.status].fg, stBd: stMap[r.status].bd,
+    }));
+
+    const carteira = [
+      { empresa:'Indústria Beta Plásticos', valor:fmt(4980) },
+      { empresa:'Cooperativa Agro Sul', valor:fmt(7320) },
+      { empresa:'Cerâmica Planalto', valor:fmt(3210) },
+    ];
+
+    const BG = {
+      info:{bg:'var(--eeds-info-bg)',fg:'var(--eeds-info-fg)',bd:'var(--eeds-info-border)'},
+      warning:{bg:'var(--eeds-warning-bg)',fg:'var(--eeds-warning-fg)',bd:'var(--eeds-warning-border)'},
+      success:{bg:'var(--eeds-success-bg)',fg:'var(--eeds-success-fg)',bd:'var(--eeds-success-border)'},
+      danger:{bg:'var(--eeds-danger-bg)',fg:'var(--eeds-danger-fg)',bd:'var(--eeds-danger-border)'},
+      neutral:{bg:'var(--eeds-ink-100)',fg:'var(--eeds-ink-700)',bd:'var(--eeds-ink-200)'},
+      brand:{bg:'var(--eeds-navy-50)',fg:'var(--eeds-navy-700)',bd:'var(--eeds-navy-200)'},
+      orange:{bg:'var(--eeds-orange-50)',fg:'var(--eeds-orange-600)',bd:'var(--eeds-orange-200)'},
+    };
+    const sb = (v) => BG[v] || BG.neutral;
+
+    // ===== LEADS =====
+    const leadsRaw = [
+      { id:'LD-1042', empresa:'Metalúrgica Andrade S.A.', contato:'João Mendes', cargo:'Diretor Industrial', fone:'(31) 99812-4471', email:'joao.mendes@andrademetal.com.br', sub:'SE/CO', mw:1.8, origem:'Indicação', status:'Qualificado', sv:'brand', data:'18/06' },
+      { id:'LD-1041', empresa:'Frigorífico Vale Verde', contato:'Carla Souza', cargo:'Gerente de Operações', fone:'(54) 99640-2210', email:'carla.souza@valeverde.com.br', sub:'S', mw:3.2, origem:'Prospecção', status:'Em contato', sv:'warning', data:'17/06' },
+      { id:'LD-1039', empresa:'Rede Supermercados Bahia', contato:'Pedro Lima', cargo:'CFO', fone:'(71) 99155-8830', email:'pedro.lima@superbahia.com.br', sub:'NE', mw:2.4, origem:'Site', status:'Novo', sv:'info', data:'16/06' },
+      { id:'LD-1036', empresa:'Têxtil Nordeste Ltda', contato:'Ana Ferreira', cargo:'Diretora', fone:'(85) 98744-1190', email:'ana@textilnordeste.com.br', sub:'NE', mw:1.1, origem:'Evento', status:'Novo', sv:'info', data:'14/06' },
+      { id:'LD-1030', empresa:'Cerâmica Planalto', contato:'Roberto Dias', cargo:'Sócio', fone:'(62) 99320-7765', email:'roberto@ceramicaplanalto.com.br', sub:'SE/CO', mw:0.9, origem:'Indicação', status:'Convertido', sv:'success', data:'09/06' },
+      { id:'LD-1028', empresa:'Laticínios Serra Azul', contato:'Marina Castro', cargo:'Compras', fone:'(35) 99201-3344', email:'marina@serraazul.com.br', sub:'SE/CO', mw:1.5, origem:'Prospecção', status:'Descartado', sv:'neutral', data:'05/06' },
+    ];
+    const leads = leadsRaw.map(l => {
+      const enr = {
+        ...l, mwTxt: this.num(l.mw,1).replace('.',',')+' MW',
+        st: sb(l.sv), ini: l.empresa.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(),
+      };
+      enr.open = () => this.setState({ drawer:{ type:'lead', data: enr } });
+      return enr;
+    });
+
+    // ===== PIPELINE =====
+    const stageColors = ['var(--eeds-ink-400)','var(--eeds-info-fg)','var(--eeds-warning-fg)','var(--eeds-success-fg)'];
+    const pipeRaw = [
+      { stage:'Qualificação', opps:[
+        { empresa:'Têxtil Nordeste Ltda', mw:1.1, prazo:24, valor:5.6, prob:35, owner:'RC', dias:3 },
+        { empresa:'Rede Supermercados Bahia', mw:2.4, prazo:36, valor:18.4, prob:40, owner:'RC', dias:8 },
+      ]},
+      { stage:'Proposta enviada', opps:[
+        { empresa:'Metalúrgica Andrade S.A.', mw:1.8, prazo:36, valor:13.8, prob:55, owner:'RC', dias:2 },
+        { empresa:'Frigorífico Vale Verde', mw:3.2, prazo:48, valor:32.6, prob:50, owner:'JP', dias:5 },
+      ]},
+      { stage:'Negociação', opps:[
+        { empresa:'Indústria Beta Plásticos', mw:2.1, prazo:36, valor:16.1, prob:70, owner:'RC', dias:1 },
+      ]},
+      { stage:'Fechamento', opps:[
+        { empresa:'Cooperativa Agro Sul', mw:4.0, prazo:48, valor:40.8, prob:90, owner:'RC', dias:0 },
+      ]},
+    ];
+    const pipeline = pipeRaw.map((c,i) => ({
+      stage:c.stage, cor:stageColors[i], qtd:String(c.opps.length),
+      total: this.fmt(c.opps.reduce((a,o)=>a+o.valor,0)*1e6),
+      opps: c.opps.map(o => ({
+        empresa:o.empresa, mwTxt:this.num(o.mw,1).replace('.',',')+' MW · '+o.prazo+'m',
+        valor:'R$ '+this.num(o.valor,1).replace('.',',')+' mi', prob:o.prob+'%', probW:o.prob+'%',
+        owner:o.owner, dias: o.dias===0?'hoje':(o.dias+'d'),
+        cor:stageColors[i],
+        open: () => this.setState({ drawer:{ type:'opp', data:o } }),
+      })),
+    }));
+
+    // ===== NEGOCIAÇÕES FECHADAS =====
+    const dealsRaw = [
+      { empresa:'Cooperativa Agro Sul', boleta:'BLT-20451', mw:4.0, prazo:48, valor:40.8, upfront:81600, data:'02/06/26', status:'Ativo', sv:'success' },
+      { empresa:'Indústria Beta Plásticos', boleta:'BLT-20438', mw:2.1, prazo:36, valor:16.1, upfront:32200, data:'21/05/26', status:'Ativo', sv:'success' },
+      { empresa:'Cerâmica Planalto', boleta:'BLT-20402', mw:0.9, prazo:24, valor:4.6, upfront:9200, data:'30/04/26', status:'Ativo', sv:'success' },
+      { empresa:'Atacadão Centro-Oeste', boleta:'BLT-20377', mw:3.5, prazo:60, valor:44.2, upfront:88400, data:'12/04/26', status:'Em implantação', sv:'warning' },
+      { empresa:'Hospital Santa Clara', boleta:'BLT-20341', mw:1.4, prazo:36, valor:10.7, upfront:21400, data:'28/03/26', status:'Ativo', sv:'success' },
+    ];
+    const deals = dealsRaw.map(d => ({
+      empresa:d.empresa, boleta:d.boleta, sub:d.empresa,
+      mwTxt:this.num(d.mw,1).replace('.',',')+' MW', prazo:d.prazo+' meses',
+      valor:this.fmt(d.valor*1e6), upfront:this.fmt(d.upfront), data:d.data,
+      status:d.status, st:sb(d.sv),
+    }));
+
+    // proposta indicativa
+    const propostas = [
+      { empresa:'Rede Supermercados Bahia', sub:'NE', mw:2.4, prazo:36, status:'Em análise', sv:'warning', data:'Solicitado 16/06' },
+      { empresa:'Metalúrgica Andrade S.A.', sub:'SE/CO', mw:1.8, prazo:36, status:'Disponível', sv:'success', data:'Recebido 18/06', preco:289 },
+    ].map(p => ({ ...p, mwTxt:this.num(p.mw,1).replace('.',',')+' MW', st:sb(p.sv), precoTxt: p.preco? 'R$ '+this.num(p.preco,2).replace('.',',')+' /MWh':'—' }));
+
+    // ===== PAGAMENTOS =====
+    const upfrontPays = [
+      { empresa:'Cerâmica Planalto', boleta:'BLT-20402', valor:9200, data:'28/06/26', status:'Programado', sv:'info' },
+      { empresa:'Cooperativa Agro Sul', boleta:'BLT-20451', valor:81600, data:'12/06/26', status:'Pago', sv:'success' },
+      { empresa:'Indústria Beta Plásticos', boleta:'BLT-20438', valor:32200, data:'05/06/26', status:'Pago', sv:'success' },
+      { empresa:'Hospital Santa Clara', boleta:'BLT-20341', valor:21400, data:'10/04/26', status:'Pago', sv:'success' },
+    ].map(p => ({ ...p, valorTxt:this.fmt(p.valor), st:sb(p.sv) }));
+    const recorrPays = [
+      { empresa:'Cooperativa Agro Sul', comp:'jun/26', mwh:2102, rs:2.0, valor:4204, status:'Programado', sv:'info' },
+      { empresa:'Indústria Beta Plásticos', comp:'jun/26', mwh:920, rs:2.0, valor:1840, status:'Em análise', sv:'warning' },
+      { empresa:'Cerâmica Planalto', comp:'jun/26', mwh:394, rs:2.0, valor:788, status:'Programado', sv:'info' },
+      { empresa:'Cooperativa Agro Sul', comp:'mai/26', mwh:2208, rs:2.0, valor:4416, status:'Pago', sv:'success' },
+      { empresa:'Indústria Beta Plásticos', comp:'mai/26', mwh:1015, rs:2.0, valor:2030, status:'Pago', sv:'success' },
+    ].map(p => ({ ...p, mwhTxt:this.num(p.mwh)+' MWh', rsTxt:'R$ '+this.num(p.rs,2).replace('.',','), valorTxt:this.fmt(p.valor), st:sb(p.sv) }));
+
+    // ===== TREINAMENTOS =====
+    const coursesRaw = [
+      { titulo:'Fundamentos do mercado livre (ACL)', modulo:'Trilha base', dur:'42 min', prog:100, nivel:'Iniciante', lock:false },
+      { titulo:'Como originar e qualificar leads', modulo:'Vendas', dur:'35 min', prog:60, nivel:'Iniciante', lock:false },
+      { titulo:'Montando uma cotação vencedora', modulo:'Vendas', dur:'28 min', prog:20, nivel:'Intermediário', lock:false },
+      { titulo:'Modelos de comissionamento Echo', modulo:'Comercial', dur:'31 min', prog:0, nivel:'Intermediário', lock:false },
+      { titulo:'Negociação e fechamento de contratos', modulo:'Avançado', dur:'46 min', prog:0, nivel:'Avançado', lock: !t.precoBase },
+      { titulo:'Precificação e preço base (Ouro+)', modulo:'Avançado', dur:'52 min', prog:0, nivel:'Avançado', lock: !t.precoBase },
+    ];
+    const courses = coursesRaw.map(c => ({
+      ...c, progTxt:c.prog+'%', progW:c.prog+'%',
+      stTxt: c.prog===100?'Concluído':(c.prog>0?'Em andamento':'Não iniciado'),
+      stCol: c.prog===100?'var(--eeds-success-fg)':(c.prog>0?'var(--eeds-orange-500)':'var(--eeds-ink-500)'),
+      unlocked: !c.lock,
+      open: c.lock ? (()=>{}) : (() => this.setState({ video:c })),
+    }));
+
+    // ===== NÍVEIS =====
+    const allTiers = ['Bronze','Prata','Ouro','Diamante'];
+    const tierIcons = { Bronze:'Award', Prata:'Medal', Ouro:'Crown', Diamante:'Gem' };
+    const ranking = allTiers.indexOf(nivel);
+    const tierCards = allTiers.map((tn,i) => {
+      const td = this.tiers()[tn];
+      return {
+        nome:tn, icoEl: ico[tierIcons[tn]],
+        upfront: this.num(td.upfront,1).replace('.',',')+'%',
+        recorr: 'R$ '+this.num(td.recorr,1).replace('.',',')+'/MWh',
+        faixa: td.proxMW ? (td.atualMW+'–'+td.proxMW+' MW') : ('40+ MW'),
+        precoBase: td.precoBase,
+        atual: i===ranking, alcancado: i<=ranking,
+        cor: td.cor,
+        cardBg: i===ranking ? 'var(--eeds-navy-700)' : '#fff',
+        cardFg: i===ranking ? '#fff' : 'var(--eeds-ink-800)',
+        cardBd: i===ranking ? 'var(--eeds-navy-700)' : 'var(--eeds-ink-200)',
+      };
+    });
+    const beneficios = [
+      { nome:'Comissão upfront', valor: this.num(t.upfront,1).replace('.',',')+'% sobre contrato', icon:'HandCoins' },
+      { nome:'Recorrência mensal', valor:'R$ '+this.num(t.recorr,1).replace('.',',')+' por MWh consumido', icon:'Repeat' },
+      { nome:'Solicitar preço base', valor: t.precoBase?'Liberado':'Bloqueado — disponível no Ouro', icon: t.precoBase?'CircleCheck':'Lock' },
+      { nome:'Relatórios consolidados', valor: ranking>=1?'Liberado':'Bloqueado — disponível na Prata', icon: ranking>=1?'CircleCheck':'Lock' },
+      { nome:'Gerente de contas dedicado', valor: ranking>=2?'Liberado':'Bloqueado — disponível no Ouro', icon: ranking>=2?'CircleCheck':'Lock' },
+    ].map(b => { const on = !/Bloqueado/.test(b.valor); return { ...b, icoEl: ico[b.icon], on, iconBg: on?'var(--eeds-success-bg)':'var(--eeds-ink-100)', iconFg: on?'var(--eeds-success-fg)':'var(--eeds-ink-400)' }; });
+
+    // ===== COTAÇÃO (cálculo) =====
+    const q = this.computeQuote(nivel);
+    const upBarPct = q.total>0 ? Math.round(q.upfront/q.total*100) : 0;
+    const quote = {
+      volume: this.num(this.state.qVolume,1).replace('.',','),
+      prazo: this.state.qPrazo,
+      preco: this.num(this.state.qPreco),
+      upPct: this.num(q.upPct,1).replace('.',','),
+      recRS: this.num(q.recRS,1).replace('.',','),
+      mwhMes: this.num(q.mwhMes),
+      valorMes: this.fmt(q.valorMes),
+      valorTotal: this.fmt(q.valorTotal),
+      upfront: this.fmt(q.upfront),
+      recorrMes: this.fmt(q.recorrMes),
+      recorrTotal: this.fmt(q.recorrTotal),
+      total: this.fmt(q.total),
+      upBarW: upBarPct+'%', recBarW: (100-upBarPct)+'%',
+      precoFinal: this.num(this.state.qPreco + 5),
+    };
+
+    // ===== DRAWER / VIDEO =====
+    const drawer = this.state.drawer;
+    const drawerLead = drawer && drawer.type==='lead' ? drawer.data : null;
+    const drawerOpp = drawer && drawer.type==='opp' ? drawer.data : null;
+    const video = this.state.video;
+
+    return {
+      ico,
+      nivel, proxNivel, nivelPct, nivelPctW: nivelPct+'%',
+      tierIco: ico[ nivel==='Diamante'?'Gem' : nivel==='Ouro'?'Crown' : nivel==='Prata'?'Medal' : 'Award' ],
+      show,
+      pageTitle: titles[s] || 'Portal de parceiros',
+      // nav
+      nav: this.nav(ico),
+      // handlers
+      goOtp: () => this.setState({ loginStep:'otp' }),
+      backToEmail: () => this.setState({ loginStep:'email' }),
+      doLogin: () => this.setState({ loggedIn:true }),
+      logout: () => this.setState({ loggedIn:false, loginStep:'email' }),
+      goLeads: () => this.setState({ screen:'leads' }),
+      goCotacao: () => this.setState({ screen:'cotacao' }),
+      goPagamentos: () => this.setState({ screen:'pagamentos' }),
+      goNivel: () => this.setState({ screen:'nivel' }),
+      // dashboard
+      dashA: dashVariant === 'Resumo executivo',
+      dashB: dashVariant === 'Foco em comissões',
+      kpis: kpiVals,
+      chartBars, funil, proxRepasses, carteira,
+      acumAno: fmt(412800), acumUpfront: fmt(286400), acumRecorr: fmt(126400),
+      mrrValor: fmt(21340),
+      // handlers extra
+      goOportunidades: () => this.setState({ screen:'oportunidades' }),
+      goNegociacoes: () => this.setState({ screen:'negociacoes' }),
+      goTreinamentos: () => this.setState({ screen:'treinamentos' }),
+      closeDrawer: () => this.setState({ drawer:null }),
+      closeVideo: () => this.setState({ video:null }),
+      setPayUpfront: () => this.setState({ payTab:'upfront' }),
+      setPayRecorr: () => this.setState({ payTab:'recorrencia' }),
+      payUpfront: this.state.payTab==='upfront',
+      payRecorr: this.state.payTab==='recorrencia',
+      setQVolume: (e) => this.setState({ qVolume: parseFloat(e.target.value) }),
+      setQPrazo: (e) => this.setState({ qPrazo: parseInt(e.target.value) }),
+      setQPreco: (e) => this.setState({ qPreco: parseInt(e.target.value) }),
+      setQuoteGuiado: () => this.setState({ quoteVariant:'guiado' }),
+      setQuoteAvancado: () => this.setState({ quoteVariant:'avancado' }),
+      quoteGuiado: this.state.quoteVariant==='guiado',
+      quoteAvancado: this.state.quoteVariant==='avancado',
+      // data
+      leads, pipeline, deals, propostas, upfrontPays, recorrPays, courses, tierCards, beneficios, quote,
+      tierPrecoBase: t.precoBase,
+      tierUpfront: this.num(t.upfront,1).replace('.',',')+'%',
+      tierRecorr: 'R$ '+this.num(t.recorr,1).replace('.',',')+'/MWh',
+      // drawer / video
+      drawerOpen: !!drawer,
+      isLeadDrawer: !!drawerLead, isOppDrawer: !!drawerOpp,
+      dLead: drawerLead, dOpp: drawerOpp,
+      videoOpen: !!video, videoTitle: video?video.titulo:'', videoModulo: video?video.modulo:'', videoDur: video?video.dur:'',
+      // payment summary
+      paySummary: { upfrontPrev: fmt(9200), recorrMes: fmt(6832), totalAno: fmt(412800) },
+      // segmented controls
+      stop: (e) => e.stopPropagation(),
+      // ===== atendimento / chat =====
+      chatMsgs: this.state.chatMsgs.map((m,i) => ({
+        ...m, key:i, mine: m.from==='me',
+        rowJustify: m.from==='me' ? 'flex-end' : 'flex-start',
+        bubbleBg: m.from==='me' ? 'var(--eeds-navy-600)' : '#fff',
+        bubbleFg: m.from==='me' ? '#fff' : 'var(--eeds-ink-800)',
+        bubbleBd: m.from==='me' ? 'var(--eeds-navy-600)' : 'var(--eeds-ink-200)',
+        horaFg: m.from==='me' ? 'rgba(255,255,255,.65)' : 'var(--eeds-ink-400)',
+      })),
+      chatDraft: this.state.chatDraft,
+      setChatDraft: (e) => this.setState({ chatDraft: e.target.value }),
+      sendChat: () => {
+        const txt = (this.state.chatDraft || '').trim();
+        if (!txt) return;
+        const hora = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        this.setState({ chatMsgs:[...this.state.chatMsgs, { from:'me', txt, hora }], chatDraft:'' });
+      },
+      chatKey: (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); const txt=(this.state.chatDraft||'').trim(); if(!txt) return; const hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); this.setState({ chatMsgs:[...this.state.chatMsgs,{from:'me',txt,hora}], chatDraft:'' }); } },
+      casosAbertos: [
+        { id:'CASE-00041288', assunto:'Divergência no cálculo da comissão recorrente · Cooperativa Agro Sul', tipo:'Dúvida', status:'Em Andamento', sv:'info', sla:'No Prazo', slaSv:'success', criado:'18/06/2026 09:12' },
+        { id:'CASE-00041102', assunto:'Solicitação de material de apresentação atualizado', tipo:'Solicitação', status:'Aguardando Cliente', sv:'warning', sla:'Próximo do Vencimento', slaSv:'warning', criado:'14/06/2026 16:40' },
+        { id:'CASE-00040977', assunto:'Atualização de dados bancários para repasse', tipo:'Solicitação', status:'Resolvido', sv:'success', sla:'—', slaSv:'neutral', criado:'06/06/2026 11:05' },
+      ].map(c => ({ ...c, st: sb(c.sv), slaSt: sb(c.slaSv) })),
+      // ===== notificações =====
+      notifGroups: [
+        { quando:'Hoje', items:[
+          { tipo:'Comissão', icon:'HandCoins', sv:'success', titulo:'Upfront da Cooperativa Agro Sul foi pago', desc:'R$ 81.600,00 creditados na sua conta cadastrada.', hora:'08:42', unread:true },
+          { tipo:'Oportunidade', icon:'Workflow', sv:'info', titulo:'Frigorífico Vale Verde avançou para “Proposta enviada”', desc:'A cotação enviada há 2 dias foi visualizada pelo cliente.', hora:'07:30', unread:true },
+        ]},
+        { quando:'Esta semana', items:[
+          { tipo:'Suporte', icon:'Headphones', sv:'info', titulo:'Resposta no chamado CASE-00041288', desc:'Lúcia, do suporte ao parceiro, respondeu sua dúvida.', hora:'Ontem · 09:16', unread:false },
+          { tipo:'Proposta', icon:'FileText', sv:'warning', titulo:'Proposta indicativa disponível', desc:'Preço base recebido para Metalúrgica Andrade S.A.: R$ 289,00 /MWh.', hora:'18/06 · 14:05', unread:false },
+          { tipo:'Nível', icon:'Award', sv:'success', titulo:'Você está a 12 MW do nível Diamante', desc:'Feche mais contratos nos próximos 12 meses para destravar comissões maiores.', hora:'16/06 · 10:00', unread:false },
+        ]},
+      ].map(g => ({ ...g, items: g.items.map(it => {
+        const v = sb(it.sv);
+        return { ...it, icoEl: ico[it.icon], iconBg:v.bg, iconFg:v.fg, dot: it.unread };
+      }) })),
+      notifUnread: '2',
+      markAllRead: () => {},
+      // ===== conta: tabs =====
+      contaUsuario: this.state.contaTab==='usuario',
+      contaParceiro: this.state.contaTab==='parceiro',
+      contaAgentes: this.state.contaTab==='agentes',
+      contaNotificacoes: this.state.contaTab==='notificacoes',
+      setContaUsuario: () => this.setState({ contaTab:'usuario' }),
+      setContaParceiro: () => this.setState({ contaTab:'parceiro' }),
+      setContaAgentes: () => this.setState({ contaTab:'agentes' }),
+      setContaNotificacoes: () => this.setState({ contaTab:'notificacoes' }),
+      contaUsuarioBg: this.state.contaTab==='usuario'?'#fff':'transparent',
+      contaUsuarioFg: this.state.contaTab==='usuario'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      contaParceiroBg: this.state.contaTab==='parceiro'?'#fff':'transparent',
+      contaParceiroFg: this.state.contaTab==='parceiro'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      contaAgentesBg: this.state.contaTab==='agentes'?'#fff':'transparent',
+      contaAgentesFg: this.state.contaTab==='agentes'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      contaNotifBg: this.state.contaTab==='notificacoes'?'#fff':'transparent',
+      contaNotifFg: this.state.contaTab==='notificacoes'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      notifRows: [
+        { id:'comissao', icon:'HandCoins', sv:'success', label:'Comissões e pagamentos', desc:'Repasses upfront e recorrentes creditados ou programados', emailKey:'comissaoEmail', portalKey:'comissaoPortal' },
+        { id:'oport',    icon:'Workflow',  sv:'info',    label:'Oportunidades',          desc:'Mudanças de estágio e cotações visualizadas pelo cliente', emailKey:'oportEmail', portalKey:'oportPortal' },
+        { id:'proposta', icon:'FileText',  sv:'warning', label:'Propostas indicativas',  desc:'Preço base recebido e propostas liberadas', emailKey:'propostaEmail', portalKey:'propostaPortal' },
+        { id:'suporte',  icon:'Headphones',sv:'info',    label:'Atendimento',            desc:'Respostas e atualizações nos chamados de suporte', emailKey:'suporteEmail', portalKey:'suportePortal' },
+        { id:'novidades',icon:'Sparkles',  sv:'warning', label:'Novidades e treinamentos', desc:'Novas vídeo-aulas, campanhas e comunicados da Echo', emailKey:'novidadesEmail', portalKey:'novidadesPortal' },
+      ].map(r => {
+        const v = sb(r.sv);
+        const emailOn = !!this.state.contaNotif[r.emailKey];
+        const portalOn = !!this.state.contaNotif[r.portalKey];
+        return { ...r, icoEl: ico[r.icon], iconBg:v.bg, iconFg:v.fg,
+          emailTrackBg: emailOn?'var(--eeds-navy-600)':'var(--eeds-ink-300)', emailKnob: emailOn?'flex-end':'flex-start',
+          portalTrackBg: portalOn?'var(--eeds-navy-600)':'var(--eeds-ink-300)', portalKnob: portalOn?'flex-end':'flex-start',
+          toggleEmail: () => this.setState({ contaNotif:{ ...this.state.contaNotif, [r.emailKey]: !this.state.contaNotif[r.emailKey] } }),
+          togglePortal: () => this.setState({ contaNotif:{ ...this.state.contaNotif, [r.portalKey]: !this.state.contaNotif[r.portalKey] } }),
+        };
+      }),
+      agentes: [
+        { nome:'Renata Campos', cargo:'Administradora da conta', email:'renata.campos@solarengconsultoria.com.br', clientes:14, status:'Ativo', sv:'success', acesso:'Total', admin:true },
+        { nome:'Bruno Tavares', cargo:'Agente de vendas', email:'bruno.tavares@solarengconsultoria.com.br', clientes:6, status:'Ativo', sv:'success', acesso:'Própria carteira', admin:false },
+        { nome:'Letícia Moraes', cargo:'Agente de vendas', email:'leticia.moraes@solarengconsultoria.com.br', clientes:3, status:'Ativo', sv:'success', acesso:'Própria carteira', admin:false },
+        { nome:'Diego Antunes', cargo:'Agente de vendas', email:'diego.antunes@solarengconsultoria.com.br', clientes:0, status:'Convite pendente', sv:'warning', acesso:'Própria carteira', admin:false },
+      ].map(a => ({ ...a, st: sb(a.sv), ini: a.nome.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(), clientesTxt: a.clientes===1?'1 cliente':(a.clientes+' clientes') })),
+      agentesCount: '4',
+      checkIco: ico.CircleCheck,
+      // ===== convidar agente (modal) =====
+      inviteOpen: this.state.inviteOpen,
+      openInvite: () => this.setState({ inviteOpen:true, invitePerfil:'agente' }),
+      closeInvite: () => this.setState({ inviteOpen:false }),
+      notifPrefs: [
+        { id:'comissao',    icon:'HandCoins', sv:'success', label:'Comissões e pagamentos', desc:'Repasses upfront e recorrentes creditados ou programados' },
+        { id:'oportunidade',icon:'Workflow',  sv:'info',    label:'Oportunidades',          desc:'Mudanças de estágio e cotações visualizadas pelo cliente' },
+        { id:'suporte',     icon:'Headphones',sv:'info',    label:'Atendimento',            desc:'Respostas e atualizações nos chamados de suporte' },
+        { id:'novidades',   icon:'Sparkles',  sv:'warning', label:'Novidades e treinamentos', desc:'Novas vídeo-aulas, campanhas e comunicados da Echo' },
+      ].map(n => {
+        const on = !!this.state.invNotif[n.id];
+        const v = sb(n.sv);
+        return { ...n, icoEl: ico[n.icon], iconBg:v.bg, iconFg:v.fg,
+          trackBg: on ? 'var(--eeds-navy-600)' : 'var(--eeds-ink-300)',
+          knobJustify: on ? 'flex-end' : 'flex-start',
+          toggle: () => this.setState({ invNotif: { ...this.state.invNotif, [n.id]: !this.state.invNotif[n.id] } }),
+        };
+      }),
+      perfis: [
+        { id:'admin',  nome:'Administrador',    icon:'ShieldCheck', resumo:'Acesso total à conta do parceiro',
+          bullets:['Enxerga toda a carteira de clientes do parceiro','Gerencia agentes, convites e dados bancários','Acompanha todas as comissões upfront e recorrentes'] },
+        { id:'agente', nome:'Agente de vendas', icon:'Briefcase', resumo:'Origina e acompanha a própria carteira',
+          bullets:['Vê apenas os clientes que ele mesmo originou','Registra leads, cria oportunidades e gera cotações','Acompanha as comissões dos seus próprios negócios'] },
+        { id:'consulta', nome:'Consulta',       icon:'Eye', resumo:'Somente leitura, sem edição',
+          bullets:['Visualiza relatórios e o andamento das negociações','Não cria leads, cotações nem altera cadastros','Indicado para sócios e back-office de apoio'] },
+      ].map(p => {
+        const sel = this.state.invitePerfil === p.id;
+        return { ...p, icoEl: ico[p.icon], selected: sel,
+          cardBd: sel ? 'var(--eeds-navy-600)' : 'var(--eeds-ink-200)',
+          cardBg: sel ? 'var(--eeds-navy-50)' : '#fff',
+          ring: sel ? '0 0 0 1px var(--eeds-navy-600)' : 'none',
+          iconBg: sel ? 'var(--eeds-navy-600)' : 'var(--eeds-ink-100)',
+          iconFg: sel ? '#fff' : 'var(--eeds-ink-500)',
+          radioBd: sel ? 'var(--eeds-navy-600)' : 'var(--eeds-ink-300)',
+          radioOn: sel,
+          pick: () => this.setState({ invitePerfil: p.id }),
+        };
+      }),
+      goAtendimento: () => this.setState({ screen:'atendimento' }),
+      goNotificacoes: () => this.setState({ screen:'notificacoes' }),
+      goConta: () => this.setState({ screen:'conta' }),
+      // user menu (topbar)
+      userMenuOpen: this.state.userMenuOpen,
+      userMenuBg: this.state.userMenuOpen ? 'var(--eeds-ink-100)' : 'transparent',
+      userMenuCaret: this.state.userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleUserMenu: () => this.setState({ userMenuOpen: !this.state.userMenuOpen }),
+      userMenu: [
+        { label:'Minha conta',       icon:'User',       go:'conta',        tab:'usuario' },
+        { label:'Cadastro do parceiro', icon:'Building2', go:'conta',      tab:'parceiro' },
+        { label:'Agentes de venda',  icon:'Users',      go:'conta',        tab:'agentes' },
+        { label:'Notificações',      icon:'Bell',       go:'notificacoes' },
+        { label:'Atendimento',       icon:'Headphones', go:'atendimento' },
+        { label:'__sep' },
+        { label:'Sair',              icon:'LogOut',     logout:true },
+      ].filter(Boolean).map(m => {
+        if (m.label === '__sep') return null;
+        const danger = !!m.logout;
+        return {
+          label: m.label,
+          icoEl: ico[m.icon],
+          fg: danger ? 'var(--eeds-danger-fg)' : 'var(--eeds-ink-700)',
+          icoColor: danger ? 'var(--eeds-danger-fg)' : 'var(--eeds-ink-400)',
+          onClick: () => {
+            if (m.logout) { this.setState({ userMenuOpen:false, loggedIn:false, loginStep:'email' }); return; }
+            const ns = { userMenuOpen:false, screen:m.go };
+            if (m.tab) ns.contaTab = m.tab;
+            this.setState(ns);
+          },
+        };
+      }).filter(Boolean),
+      quoteGuiadoBg: this.state.quoteVariant==='guiado'?'#fff':'transparent',
+      quoteGuiadoFg: this.state.quoteVariant==='guiado'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      quoteAvancadoBg: this.state.quoteVariant==='avancado'?'#fff':'transparent',
+      quoteAvancadoFg: this.state.quoteVariant==='avancado'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      payUpfrontBg: this.state.payTab==='upfront'?'#fff':'transparent',
+      payUpfrontFg: this.state.payTab==='upfront'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      payRecorrBg: this.state.payTab==='recorrencia'?'#fff':'transparent',
+      payRecorrFg: this.state.payTab==='recorrencia'?'var(--eeds-navy-700)':'var(--eeds-ink-500)',
+      tierPrecoBaseLocked: !t.precoBase,
+      // drawer derived
+      dLeadIni: drawerLead ? drawerLead.empresa.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase() : '',
+      dOppValor: drawerOpp ? this.num(drawerOpp.valor,1).replace('.',',') : '',
+      dOppMw: drawerOpp ? this.num(drawerOpp.mw,1).replace('.',',') : '',
+      dOppPrazo: drawerOpp ? drawerOpp.prazo : '',
+      dOppProb: drawerOpp ? drawerOpp.prob : '',
+    };
+  }
+}
+</script>
+</body>
+</html>
